@@ -7,7 +7,7 @@ import { Heart, Search, User, Gift, Plus, Menu, X } from 'lucide-react';
 const navItems = [
 	{ label: 'Home', href: '/home' },
 	{ label: 'Explore', href: '/explore' },
-	{ label: 'How It Works', href: '#how' },
+	{ label: 'How It Works', href: '/howitworks' },
 	{ label: 'About', href: '#about' },
 	{ label: 'Contact', href: '#contact' },
 ];
