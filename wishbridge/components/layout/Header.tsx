@@ -59,7 +59,7 @@ export default function Header() {
 					className="flex items-center gap-2 flex-shrink-0"
 				>
 					<Gift className="text-orange-500" size={32} />
-					<h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+					<h1 className="py-2 text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
 						WishBridge
 					</h1>
 				</motion.div>

@@ -31,7 +31,7 @@ export default function Home() {
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length);
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-orange-50 flex flex-col overflow-x-hidden">
       {/* Only one Header is rendered here now */}
-      
+
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particleStyles.map((style, i) => (
@@ -88,19 +88,18 @@ export default function Home() {
       </div>
 
       <Header />
-
       {/* Hero Section */}
       <section className="relative w-full py-16 md:py-24 px-4 flex flex-col items-center justify-center">
         <div className="absolute -top-20 right-0 w-72 h-72 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full blur-3xl opacity-30 -z-10"></div>
         <div className="absolute -bottom-20 left-0 w-64 h-64 bg-gradient-to-r from-rose-300 to-orange-300 rounded-full blur-3xl opacity-30 -z-10"></div>
-        
+
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           className="flex flex-col items-center text-center max-w-4xl"
         >
-          <motion.div 
+          <motion.div
             className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -109,7 +108,7 @@ export default function Home() {
             <Sparkles className="text-orange-500" size={20} />
             <span className="text-orange-500 font-medium">Making dreams come true since 2024</span>
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -120,7 +119,7 @@ export default function Home() {
               Connect Hearts, Fulfill Dreams
             </span>
           </motion.h1>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -129,14 +128,14 @@ export default function Home() {
           >
             A revolutionary platform where generosity meets aspiration. Post your wish, grant someone's dream, and create meaningful connections.
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
             className="flex flex-wrap justify-center gap-4"
           >
-            <motion.a 
+            <motion.a
               href="#post"
               className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
               whileHover={{ scale: 1.05 }}
@@ -145,8 +144,8 @@ export default function Home() {
               <span className="relative z-10">Post a Wish</span>
               <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </motion.a>
-            
-            <motion.a 
+
+            <motion.a
               href="#explore"
               className="relative bg-white text-orange-500 border-2 border-orange-300 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
               whileHover={{ scale: 1.05 }}
@@ -159,8 +158,8 @@ export default function Home() {
             </motion.a>
           </motion.div>
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -168,7 +167,7 @@ export default function Home() {
           transition={{ duration: 0.7 }}
         >
           {[1, 2, 3, 4].map((item, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-orange-100 shadow-md hover:shadow-lg transition-all"
               whileHover={{ y: -10 }}
@@ -183,7 +182,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="h-2 bg-orange-100 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
                   initial={{ width: 0 }}
                   whileInView={{ width: `${Math.random() * 50 + 50}%` }}
@@ -205,7 +204,7 @@ export default function Home() {
         className="w-full py-16 md:py-24 px-4 relative"
       >
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -221,10 +220,10 @@ export default function Home() {
               A seamless journey from wish to fulfillment. Our platform makes generosity simple and impactful.
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-3 gap-8 relative">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-1 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full hidden md:block"></div>
-            
+
             {[
               {
                 icon: <Gift className="text-white" size={32} />,
@@ -259,7 +258,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold mt-8 mb-4">{item.title}</h3>
                 <p className="text-gray-600 mb-6">{item.description}</p>
-                <motion.div 
+                <motion.div
                   className="text-xs font-medium text-orange-500 flex items-center gap-1"
                   whileHover={{ gap: 4 }}
                 >
@@ -281,7 +280,7 @@ export default function Home() {
         className="w-full py-16 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50"
       >
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -297,7 +296,7 @@ export default function Home() {
               We're redefining generosity with technology, trust, and heartfelt connections.
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -330,7 +329,7 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -375,7 +374,7 @@ export default function Home() {
         className="w-full py-16 md:py-24 px-4"
       >
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -391,7 +390,7 @@ export default function Home() {
               Everything you need to make wishes come true and track your impact.
             </p>
           </motion.div>
-          
+
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/3">
               <div className="bg-white rounded-2xl shadow-xl p-6 h-full">
@@ -400,25 +399,22 @@ export default function Home() {
                   {features.map((feature, i) => (
                     <motion.div
                       key={i}
-                      className={`p-4 rounded-xl cursor-pointer transition-all ${
-                        activeFeature === i 
-                          ? 'bg-gradient-to-r from-orange-50 to-rose-50 border border-orange-200 shadow-sm' 
+                      className={`p-4 rounded-xl cursor-pointer transition-all ${activeFeature === i
+                          ? 'bg-gradient-to-r from-orange-50 to-rose-50 border border-orange-200 shadow-sm'
                           : 'hover:bg-orange-50'
-                      }`}
+                        }`}
                       onClick={() => setActiveFeature(i)}
                       whileHover={{ x: 5 }}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${
-                          activeFeature === i 
-                            ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
+                        <div className={`p-2 rounded-lg ${activeFeature === i
+                            ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white'
                             : 'bg-orange-100 text-orange-500'
-                        }`}>
+                          }`}>
                           {feature.icon}
                         </div>
-                        <span className={`font-medium ${
-                          activeFeature === i ? 'text-orange-600' : 'text-gray-700'
-                        }`}>
+                        <span className={`font-medium ${activeFeature === i ? 'text-orange-600' : 'text-gray-700'
+                          }`}>
                           {feature.title}
                         </span>
                       </div>
@@ -427,8 +423,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            
-            <motion.div 
+
+            <motion.div
               className="md:w-2/3 bg-gradient-to-br from-orange-50 to-rose-50 rounded-2xl shadow-xl p-8 flex items-center justify-center relative overflow-hidden"
               animate={controls}
               initial={{ opacity: 0, y: 20 }}
@@ -452,16 +448,15 @@ export default function Home() {
                   Learn More
                 </motion.button>
               </div>
-              
+
               <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
                 {features.map((_, i) => (
-                  <button 
+                  <button
                     key={i}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      activeFeature === i 
-                        ? 'bg-gradient-to-r from-orange-500 to-rose-500' 
+                    className={`w-3 h-3 rounded-full transition-colors ${activeFeature === i
+                        ? 'bg-gradient-to-r from-orange-500 to-rose-500'
                         : 'bg-orange-200'
-                    }`}
+                      }`}
                     onClick={() => setActiveFeature(i)}
                   />
                 ))}
@@ -480,7 +475,7 @@ export default function Home() {
         className="w-full py-16 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50"
       >
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -496,7 +491,7 @@ export default function Home() {
               Discover how WishBridge has transformed lives and created moments of joy.
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -540,10 +535,10 @@ export default function Home() {
                   <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, j) => (
-                      <Star 
-                        key={j} 
-                        className={j < 4 ? "text-orange-500 fill-current" : "text-orange-300"} 
-                        size={16} 
+                      <Star
+                        key={j}
+                        className={j < 4 ? "text-orange-500 fill-current" : "text-orange-300"}
+                        size={16}
                       />
                     ))}
                   </div>
@@ -568,8 +563,8 @@ export default function Home() {
               <div className="absolute -top-20 -left-20 w-64 h-64 bg-white rounded-full"></div>
               <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white rounded-full"></div>
             </div>
-            
-            <motion.div 
+
+            <motion.div
               className="relative z-10"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -581,7 +576,7 @@ export default function Home() {
                 Join our community of dream-makers and experience the joy of giving and receiving.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <motion.a 
+                <motion.a
                   href="#"
                   className="bg-white text-orange-500 px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-orange-50 transition-all group"
                   whileHover={{ scale: 1.05 }}
@@ -591,7 +586,7 @@ export default function Home() {
                     Become a Donor <Heart className="text-rose-500" size={20} />
                   </span>
                 </motion.a>
-                <motion.a 
+                <motion.a
                   href="#"
                   className="bg-transparent border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all group"
                   whileHover={{ scale: 1.05 }}
@@ -639,7 +634,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            
+
             {[
               {
                 title: "Platform",
@@ -659,8 +654,8 @@ export default function Home() {
                 <ul className="space-y-3">
                   {column.links.map((link, j) => (
                     <li key={j}>
-                      <a 
-                        href="#" 
+                      <a
+                        href="#"
                         className="text-gray-600 hover:text-orange-500 transition-colors"
                       >
                         {link}
@@ -671,7 +666,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          
+
           <div className="pt-8 border-t border-orange-100 text-center text-gray-600">
             <p>
               © {new Date().getFullYear()} WishBridge. Making wishes come true, one gift at a time.

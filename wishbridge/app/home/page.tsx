@@ -93,8 +93,8 @@ export default function Home() {
           />
         ))}
       </div>
-
-      
+      {/* Navbar Section */}
+      <Header />
       
 
       {/* Hero Section */}
