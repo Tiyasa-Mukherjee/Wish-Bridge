@@ -2,48 +2,41 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Gift, Heart, Star, ShieldCheck, Search, User, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook } from 'lucide-react';
-import Header from '../components/layout/Header';
-
+import { Gift, Heart, Star, ShieldCheck, Search, User, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, ShoppingBag, Palette, AlertTriangle, Bike, Laptop, GraduationCap } from 'lucide-react';
+import Header from '@/components/layout/Header';
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
+  const [activeCategory, setActiveCategory] = useState(0);
   const controls = useAnimation();
 
   const features = [
     {
       title: "Wish Categories",
-      description: "Education, Health, Essentials, Gifts, Dreams, Emergency, and more.",
+      description: "Education, Health, Essentials, Gifts, Dreams, Emergency, and more. Find exactly what moves your heart.",
       icon: <Search className="text-rose-500" size={24} />
     },
     {
       title: "Trust & Safety",
-      description: "AI + Human moderation, KYC, and anti-fraud monitoring for a safe experience.",
+      description: "AI + Human moderation, KYC verification, and anti-fraud monitoring ensure a safe giving experience.",
       icon: <ShieldCheck className="text-orange-500" size={24} />
     },
     {
       title: "Impact Stories",
-      description: "See the difference you make with post-fulfillment photos and videos.",
+      description: "See the difference you make with heartfelt post-fulfillment photos and videos from recipients.",
       icon: <Heart className="text-rose-500" size={24} />
     }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % features.length);
-    }, 3000);
-    
-    return () => clearInterval(interval);
-  }, []);
+  const categories = [
+    { name: "Education", icon: <BookOpen className="text-orange-500" size={20} /> },
+    { name: "Health", icon: <Stethoscope className="text-rose-500" size={20} /> },
+    { name: "Essentials", icon: <House className="text-orange-500" size={20} /> },
+    { name: "Gifts", icon: <Gift className="text-rose-500" size={20} /> },
+    { name: "Dreams", icon: <Palette className="text-orange-500" size={20} /> },
+    { name: "Emergency", icon: <AlertTriangle className="text-rose-500" size={20} /> }
+  ];
 
-  useEffect(() => {
-    controls.start({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    });
-  }, [activeFeature, controls]);
-
-  // Floating Particles
+  // Replace Math.random() in floating particles with fixed values to avoid hydration errors
   const particleStyles = [
     { background: 'rgba(255, 112, 46, 0.1)', width: 32, height: 32, left: '10%', top: '20%' },
     { background: 'rgba(249, 168, 212, 0.1)', width: 24, height: 24, left: '30%', top: '40%' },
@@ -62,10 +55,24 @@ export default function Home() {
     { background: 'rgba(255, 159, 67, 0.1)', width: 20, height: 39, left: '23%', top: '50%' },
   ];
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % features.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    });
+  }, [activeFeature, controls]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-orange-50 flex flex-col overflow-x-hidden">
-      {/* Only one Header is rendered here now */}
-      
       {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particleStyles.map((style, i) => (
@@ -87,133 +94,349 @@ export default function Home() {
         ))}
       </div>
 
-      <Header />
+      
+      
 
       {/* Hero Section */}
-      <section className="relative w-full py-16 md:py-24 px-4 flex flex-col items-center justify-center">
+      <section className="relative w-full py-12 md:py-24 px-4 flex flex-col items-center justify-center">
         <div className="absolute -top-20 right-0 w-72 h-72 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full blur-3xl opacity-30 -z-10"></div>
         <div className="absolute -bottom-20 left-0 w-64 h-64 bg-gradient-to-r from-rose-300 to-orange-300 rounded-full blur-3xl opacity-30 -z-10"></div>
         
-        <motion.div
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="flex flex-col items-center text-center max-w-4xl"
-        >
-          <motion.div 
-            className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <Sparkles className="text-orange-500" size={20} />
-            <span className="text-orange-500 font-medium">Making dreams come true since 2024</span>
+            <motion.div 
+              className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Sparkles className="text-orange-500" size={20} />
+              <span className="text-orange-500 font-medium">Making dreams come true since 2024</span>
+            </motion.div>
+            
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight"
+            >
+              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                Where Kindness Connects Dreams
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.7 }}
+              className="text-lg text-gray-700 mb-8"
+            >
+              WishBridge brings together those in need and those who can help. Share your wish or grant someone's dream - anonymously or publicly.
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="flex flex-wrap gap-4"
+            >
+              <motion.a 
+                href="#post"
+                className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <Plus size={20} /> Post a Wish
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </motion.a>
+              
+              <motion.a 
+                href="#explore"
+                className="relative bg-white text-orange-500 border-2 border-orange-300 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <Search size={20} /> Explore Wishes
+                </span>
+                <div className="absolute inset-0 bg-orange-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </motion.a>
+            </motion.div>
           </motion.div>
-          
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7 }}
-            className="text-4xl md:text-6xl font-extrabold mb-6"
-          >
-            <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-              Connect Hearts, Fulfill Dreams
-            </span>
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.7 }}
-            className="text-xl text-gray-700 max-w-2xl mb-10"
-          >
-            A revolutionary platform where generosity meets aspiration. Post your wish, grant someone's dream, and create meaningful connections.
-          </motion.p>
           
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="flex flex-wrap justify-center gap-4"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative"
           >
-            <motion.a 
-              href="#post"
-              className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10">Post a Wish</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </motion.a>
-            
-            <motion.a 
-              href="#explore"
-              className="relative bg-white text-orange-500 border-2 border-orange-300 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Explore Wishes <ChevronRight size={20} />
-              </span>
-              <div className="absolute inset-0 bg-orange-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </motion.a>
-          </motion.div>
-        </motion.div>
-        
-        <motion.div 
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
-          {[1, 2, 3, 4].map((item, i) => (
-            <motion.div 
-              key={i}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-orange-100 shadow-md hover:shadow-lg transition-all"
-              whileHover={{ y: -10 }}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Heart className="text-orange-500" size={20} />
+            <div className="relative bg-white rounded-2xl shadow-xl p-6 border border-orange-100">
+              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-bold text-sm">
+                Featured Wish
+              </div>
+              
+              <div className="flex items-start gap-4 mb-6">
+                <div className="bg-orange-100 rounded-full p-2">
+                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
                 </div>
                 <div>
-                  <h3 className="font-bold">24K+</h3>
-                  <p className="text-sm text-gray-600">Wishes Granted</p>
+                  <h3 className="font-bold text-xl flex items-center gap-2">
+                    Laptop for Online Classes
+                    <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">Verified</span>
+                  </h3>
+                  <p className="text-orange-500 text-sm flex items-center gap-1">
+                    <GraduationCap size={16} /> Education
+                  </p>
                 </div>
               </div>
-              <div className="h-2 bg-orange-100 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${Math.random() * 50 + 50}%` }}
-                  transition={{ duration: 1, delay: i * 0.1 }}
-                />
+              
+              <p className="text-gray-700 mb-6">
+                "I'm a college student struggling to keep up with online classes. A laptop would help me complete assignments and attend lectures."
+              </p>
+              
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium text-gray-700">$420 raised of $800</span>
+                  <span className="text-sm font-medium text-orange-600">52%</span>
+                </div>
+                <div className="w-full bg-orange-100 rounded-full h-2.5">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: '52%' }}
+                    transition={{ duration: 1.5 }}
+                  />
+                </div>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <div className="flex -space-x-2">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="w-8 h-8 bg-gray-200 border-2 border-white rounded-full" />
+                    ))}
+                  </div>
+                  <span>24 supporters</span>
+                </div>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                >
+                  Grant Wish
+                </motion.button>
+              </div>
+            </div>
+            
+            <motion.div 
+              className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-orange-300 to-rose-300 rounded-xl blur-xl opacity-40 -z-10"
+              animate={{ 
+                rotate: [0, 5, 0, -5, 0],
+              }}
+              transition={{ 
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="w-full py-12 md:py-20 px-4 bg-gradient-to-br from-white to-orange-50">
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                Wish Categories
+              </span>
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover wishes that resonate with your desire to help. Filter by category to find what moves you.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((category, i) => (
+              <motion.button
+                key={i}
+                className={`flex flex-col items-center justify-center p-6 rounded-2xl transition-all ${
+                  activeCategory === i 
+                    ? 'bg-gradient-to-br from-orange-100 to-rose-100 border-2 border-orange-300 shadow-md' 
+                    : 'bg-white hover:bg-orange-50 border border-orange-100'
+                }`}
+                onClick={() => setActiveCategory(i)}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -5 }}
+              >
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 ${
+                  activeCategory === i 
+                    ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
+                    : 'bg-orange-100 text-orange-500'
+                }`}>
+                  {category.icon}
+                </div>
+                <span className="font-medium text-gray-800">{category.name}</span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Wishes */}
+      <section id="explore" className="w-full py-12 md:py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div 
+            className="flex justify-between items-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2">
+                <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                  Featured Wishes
+                </span>
+              </h2>
+              <p className="text-gray-600">Wishes that need your support right now</p>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 text-orange-500 font-medium"
+            >
+              View all wishes <ChevronRight size={18} />
+            </motion.button>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Bicycle for School Commute",
+                category: "Education",
+                icon: <Bike className="text-orange-500" size={20} />,
+                description: "I walk 5km daily to school. A bicycle would save time and energy for studying.",
+                target: 120,
+                raised: 75,
+                supporters: 12
+              },
+              {
+                title: "Medical Treatment for Dog",
+                category: "Emergency",
+                icon: <AlertTriangle className="text-rose-500" size={20} />,
+                description: "My dog needs surgery after an accident. Help us save our family member.",
+                target: 800,
+                raised: 420,
+                supporters: 18,
+                verified: true
+              },
+              {
+                title: "Art Supplies for Community Class",
+                category: "Dreams",
+                icon: <Palette className="text-orange-500" size={20} />,
+                description: "Supplies for free art classes for underprivileged children in our neighborhood.",
+                target: 200,
+                raised: 90,
+                supporters: 8
+              }
+            ].map((wish, i) => (
+              <motion.div
+                key={i}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                whileHover={{ y: -10 }}
+              >
+                <div className="h-48 bg-gray-200 border-2 border-dashed" />
+                
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-bold text-xl">{wish.title}</h3>
+                    {wish.verified && (
+                      <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
+                        Verified
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-orange-500 mb-3">
+                    {wish.icon}
+                    <span>{wish.category}</span>
+                  </div>
+                  
+                  <p className="text-gray-700 mb-6">{wish.description}</p>
+                  
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-700">${wish.raised} raised of ${wish.target}</span>
+                      <span className="text-sm font-medium text-orange-600">
+                        {Math.round((wish.raised / wish.target) * 100)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-orange-100 rounded-full h-2.5">
+                      <motion.div 
+                        className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${(wish.raised / wish.target) * 100}%` }}
+                        transition={{ duration: 1.5 }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <div className="flex -space-x-2">
+                        {[...Array(3)].map((_, j) => (
+                          <div key={j} className="w-6 h-6 bg-gray-200 border-2 border-white rounded-full" />
+                        ))}
+                      </div>
+                      <span>{wish.supporters} supporters</span>
+                    </div>
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                    >
+                      Support Wish
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* How It Works Section */}
-      <motion.section
-        id="explore"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="w-full py-16 md:py-24 px-4 relative"
-      >
+      <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-rose-50">
         <div className="max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
                 How WishBridge Works
               </span>
             </h2>
@@ -269,27 +492,20 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      {/* Why WishBridge Section */}
-      <motion.section
-        id="post"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="w-full py-16 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50"
-      >
+      {/* Features Section */}
+      <section className="w-full py-12 md:py-24 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
                 Why Choose WishBridge?
               </span>
             </h2>
@@ -298,104 +514,10 @@ export default function Home() {
             </p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-white to-orange-50 rounded-3xl shadow-xl p-8 flex flex-col gap-6 border border-orange-100 relative overflow-hidden"
-            >
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-r from-orange-200 to-rose-200 rounded-full blur-3xl opacity-20 -z-10"></div>
-              <div className="flex items-start gap-4">
-                <div className="bg-orange-100 p-3 rounded-xl">
-                  <User className="text-orange-500" size={32} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">For Wish Makers</h3>
-                  <ul className="space-y-4">
-                    {[
-                      "Real people, real stories, real impact",
-                      "Verified wishes for trust and safety",
-                      "Anonymous or public giving—your choice",
-                      "Progress tracking and impact stories"
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <div className="bg-orange-100 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        </div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-white to-rose-50 rounded-3xl shadow-xl p-8 flex flex-col gap-6 border border-rose-100 relative overflow-hidden"
-            >
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-gradient-to-r from-rose-200 to-orange-200 rounded-full blur-3xl opacity-20 -z-10"></div>
-              <div className="flex items-start gap-4">
-                <div className="bg-rose-100 p-3 rounded-xl">
-                  <Heart className="text-rose-500" size={32} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">For Wish Granters</h3>
-                  <ul className="space-y-4">
-                    {[
-                      "Karma points, badges, and top donor features",
-                      "Platform handles logistics for tangible gifts",
-                      "Anti-fraud AI and human moderation",
-                      "Privacy and anonymity respected for all"
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <div className="bg-rose-100 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
-                          <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
-                        </div>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Features Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="w-full py-16 md:py-24 px-4"
-      >
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                Powerful Features
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Everything you need to make wishes come true and track your impact.
-            </p>
-          </motion.div>
-          
           <div className="flex flex-col md:flex-row gap-8">
             <div className="md:w-1/3">
               <div className="bg-white rounded-2xl shadow-xl p-6 h-full">
-                <h3 className="text-xl font-bold mb-6 text-gray-800">Explore Our Features</h3>
+                <h3 className="text-xl font-bold mb-6 text-gray-800">Our Features</h3>
                 <div className="space-y-4">
                   {features.map((feature, i) => (
                     <motion.div
@@ -469,23 +591,17 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Testimonials */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="w-full py-16 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50"
-      >
+      <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50">
         <div className="max-w-6xl mx-auto">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
@@ -552,7 +668,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Final CTA */}
       <motion.section
