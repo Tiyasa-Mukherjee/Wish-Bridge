@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { User, Mail, LogOut, Calendar, ShieldCheck, Edit2, Star, Heart, Gift, Plus, AlertTriangle, ArrowLeft } from 'lucide-react';
-import { signOut } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import React, { useState, useEffect } from 'react';
 import { doc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
@@ -234,7 +233,7 @@ export default function ProfilePage() {
           </div>
           <button
             className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-5 py-2 rounded-full font-medium flex items-center gap-2 shadow hover:shadow-orange-200 transition-all mt-2"
-            onClick={() => signOut(auth)}
+            onClick={() => auth.signOut()}
           >
             <LogOut size={18} /> Log Out
           </button>
