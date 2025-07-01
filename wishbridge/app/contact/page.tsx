@@ -90,7 +90,7 @@ export default function ContactPage() {
               className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
             >
               <Sparkles className="text-orange-500" size={20} />
-              <span className="text-orange-500 font-medium">We'd Love to Hear From You</span>
+              <span className="text-orange-500 font-medium">We&apos;d Love to Hear From You</span>
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, scale: 0.9 }}

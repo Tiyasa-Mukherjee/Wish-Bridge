@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Search, User, Gift, Plus, Menu, X } from 'lucide-react';
+import { Heart, Search, User, Gift, Menu, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';

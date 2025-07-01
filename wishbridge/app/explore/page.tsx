@@ -9,6 +9,22 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useAuth } from '@/context/AuthContext';
+import Image from "next/image";
+
+// Define a Wish type for type safety
+interface Wish {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  targetAmount: number;
+  raisedAmount: number;
+  supporters: number;
+  createdBy: string;
+  createdAt?: any;
+  verified?: boolean;
+  imageUrl?: string;
+}
 
 const categories = [
 	{ name: "Education", icon: <BookOpen className="text-orange-500" size={20} /> },
@@ -30,12 +46,12 @@ const sortOptions = [
 export default function Explore() {
 	const { user } = useAuth();
 	const [activeCategory, setActiveCategory] = useState(-1);
-	const [wishes, setWishes] = useState<any[]>([]);
+	const [wishes, setWishes] = useState<Wish[]>([]);
 	const [users, setUsers] = useState<{ [uid: string]: any }>({});
 	const [loading, setLoading] = useState(true);
 	const [sortBy, setSortBy] = useState("newest");
 	const [editWishId, setEditWishId] = useState<string | null>(null);
-	const [editFields, setEditFields] = useState<any>({});
+	const [editFields, setEditFields] = useState<Partial<Wish>>({});
 	const [editLoading, setEditLoading] = useState(false);
 	const [editError, setEditError] = useState('');
 
@@ -44,11 +60,11 @@ export default function Explore() {
 			setLoading(true);
 			const wishesQuery = query(collection(db, "wishes"), orderBy("createdAt", "desc"));
 			const wishesSnap = await getDocs(wishesQuery);
-			const wishList: any[] = [];
+			const wishList: Wish[] = [];
 			const userIds = new Set<string>();
 			wishesSnap.forEach((doc) => {
 				const data = doc.data();
-				wishList.push({ id: doc.id, ...data });
+				wishList.push({ id: doc.id, ...data } as Wish);
 				if (data.createdBy) userIds.add(data.createdBy);
 			});
 			setWishes(wishList);
@@ -110,11 +126,11 @@ export default function Explore() {
 			// Refresh wishes
 			const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'));
 			const wishesSnap = await getDocs(wishesQuery);
-			const wishList: any[] = [];
+			const wishList: Wish[] = [];
 			const userIds = new Set<string>();
 			wishesSnap.forEach((doc) => {
 				const data = doc.data();
-				wishList.push({ id: doc.id, ...data });
+				wishList.push({ id: doc.id, ...data } as Wish);
 				if (data.createdBy) userIds.add(data.createdBy);
 			});
 			setWishes(wishList);
@@ -126,8 +142,8 @@ export default function Explore() {
 				})
 			);
 			setUsers(userMap);
-		} catch (err: any) {
-			setEditError(err.message || 'Failed to update wish');
+		} catch (err: unknown) {
+			setEditError((err as Error).message || 'Failed to update wish');
 		} finally {
 			setEditLoading(false);
 		}
@@ -214,7 +230,7 @@ export default function Explore() {
 										>
 											<div className="h-44 bg-gray-100 border-b border-orange-50 flex items-center justify-center overflow-hidden">
 												{wish.imageUrl ? (
-													<img src={wish.imageUrl} alt={wish.title} className="object-cover w-full h-full" />
+													<Image src={wish.imageUrl} alt={wish.title} className="object-cover w-full h-full" width={400} height={176} />
 												) : (
 													<Gift className="text-orange-200" size={48} />
 												)}
@@ -299,15 +315,15 @@ export default function Explore() {
 							<form className="w-full flex flex-col gap-4" onSubmit={handleEditWishSubmit}>
 								<div>
 									<label className="block text-gray-700 font-medium mb-1">Title</label>
-									<input type="text" value={editFields.title || ''} onChange={e => setEditFields((f: any) => ({ ...f, title: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
+									<input type="text" value={editFields.title || ''} onChange={e => setEditFields(f => ({ ...f, title: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
 								</div>
 								<div>
 									<label className="block text-gray-700 font-medium mb-1">Description</label>
-									<textarea value={editFields.description || ''} onChange={e => setEditFields((f: any) => ({ ...f, description: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
+									<textarea value={editFields.description || ''} onChange={e => setEditFields(f => ({ ...f, description: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
 								</div>
 								<div>
 									<label className="block text-gray-700 font-medium mb-1">Category</label>
-									<select value={editFields.category || ''} onChange={e => setEditFields((f: any) => ({ ...f, category: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50">
+									<select value={editFields.category || ''} onChange={e => setEditFields(f => ({ ...f, category: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50">
 										{categories.map((cat, i) => (
 											<option key={i} value={cat.name}>{cat.name}</option>
 										))}
@@ -315,11 +331,11 @@ export default function Explore() {
 								</div>
 								<div>
 									<label className="block text-gray-700 font-medium mb-1">Target Amount ($)</label>
-									<input type="number" min="1" value={editFields.targetAmount || ''} onChange={e => setEditFields((f: any) => ({ ...f, targetAmount: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
+									<input type="number" min="1" value={editFields.targetAmount || ''} onChange={e => setEditFields(f => ({ ...f, targetAmount: Number(e.target.value) }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
 								</div>
 								<div>
 									<label className="block text-gray-700 font-medium mb-1">Image URL (optional)</label>
-									<input type="url" value={editFields.imageUrl || ''} onChange={e => setEditFields((f: any) => ({ ...f, imageUrl: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" placeholder="https://..." />
+									<input type="url" value={editFields.imageUrl || ''} onChange={e => setEditFields(f => ({ ...f, imageUrl: e.target.value }))} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" placeholder="https://..." />
 								</div>
 								{editError && <div className="text-red-500 text-sm">{editError}</div>}
 								<button type="submit" className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium shadow hover:shadow-orange-200 transition-all mt-2" disabled={editLoading}>

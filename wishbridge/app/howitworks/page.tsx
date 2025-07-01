@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Gift, BookOpen, Smile, Star, ChevronRight, ShieldCheck, Users, MessageCircle, Globe, Handshake, Rocket, CheckCircle } from "lucide-react";
+import { Heart, Gift, BookOpen, Smile, Star, ChevronRight, ShieldCheck, Users, MessageCircle, Globe, Handshake, CheckCircle } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 

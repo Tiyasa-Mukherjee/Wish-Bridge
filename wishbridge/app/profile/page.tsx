@@ -4,11 +4,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { User, Mail, LogOut, Calendar, ShieldCheck, Edit2, Star, Heart, Gift, Plus, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { User, Mail, LogOut, Calendar, ShieldCheck, Edit2, Star, Heart, Gift, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import React, { useState, useEffect } from 'react';
 import { doc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { getUserProfile, updateUserProfile } from '@/lib/userProfile';
+import { updateUserProfile } from '@/lib/userProfile';
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -60,7 +60,7 @@ export default function ProfilePage() {
       const postedSnap = await getDocs(postedQuery);
       setWishesPosted(postedSnap.size);
       // Wishes supported (count unique wish ids in a 'supports' subcollection or similar, fallback: 0)
-      let supported = 0;
+      const supported = 0;
       let karma = 0;
       // If you have a 'supports' subcollection or log, fetch here. Otherwise, fallback to 0.
       // Karma points: 10 per wish posted, 2 per wish supported
@@ -78,7 +78,7 @@ export default function ProfilePage() {
       [0, 3, 6], [1, 4, 7], [2, 5, 8],
       [0, 4, 8], [2, 4, 6],
     ];
-    for (let line of lines) {
+    for (const line of lines) {
       const [a, b, c] = line;
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
         return squares[a];
@@ -159,8 +159,8 @@ export default function ProfilePage() {
       setEditOpen(false);
       // Optionally, reload page or user state
       router.refresh?.();
-    } catch (err: any) {
-      setEditError(err.message || 'Failed to update profile');
+    } catch (err: unknown) {
+      setEditError((err as Error).message || 'Failed to update profile');
     } finally {
       setEditLoading(false);
     }
@@ -259,7 +259,7 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-2 items-center">
                 {winner && (
                   <div className="text-base font-bold text-orange-500 mb-1">
-                    {winner === 'Draw' ? 'It’s a draw!' : winner === 'You' ? 'You win! 🎉' : 'Computer wins!'}
+                    {winner === 'Draw' ? 'It&rsquo;s a draw!' : winner === 'You' ? 'You win! 🎉' : 'Computer wins!'}
                   </div>
                 )}
                 <button
@@ -331,7 +331,7 @@ export default function ProfilePage() {
             <h3 className="text-lg font-bold mb-3 text-orange-500 flex items-center gap-2">
               <User size={20} /> Profile Info
             </h3>
-            <p className="text-gray-700 mb-2">This is your personal profile page. In the future, you'll be able to update your details, view your wish history, and track your impact and karma points. More features coming soon!</p>
+            <p className="text-gray-700 mb-2">This is your personal profile page. In the future, you&apos;ll be able to update your details, view your wish history, and track your impact and karma points. More features coming soon!</p>
             <ul className="text-gray-600 text-sm list-disc pl-5 mb-6">
               <li>Edit your profile and upload a custom avatar</li>
               <li>See your wish posting and support history</li>
@@ -354,7 +354,7 @@ export default function ProfilePage() {
                 <label htmlFor="profile-pic" className="cursor-pointer">
                   <div className="w-20 h-20 rounded-full border-2 border-orange-200 bg-orange-50 flex items-center justify-center overflow-hidden shadow">
                     {editPhoto ? (
-                      <img src={URL.createObjectURL(editPhoto)} alt="Preview" className="w-full h-full object-cover rounded-full" />
+                      <Image src={URL.createObjectURL(editPhoto)} alt="Preview" width={80} height={80} className="w-full h-full object-cover rounded-full" />
                     ) : user.photoURL ? (
                       <Image src={user.photoURL} alt="Profile" width={80} height={80} className="rounded-full object-cover" />
                     ) : (

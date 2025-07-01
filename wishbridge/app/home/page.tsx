@@ -2,18 +2,33 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Gift, Heart, Star, ShieldCheck, Search, User, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, ShoppingBag, Palette, AlertTriangle, Bike, Laptop, GraduationCap } from 'lucide-react';
+import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import ProtectedRoute from "@/components/common/ProtectedRoute";
-import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
+
+// Define a Wish type for better type safety
+interface Wish {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  targetAmount: number;
+  raisedAmount: number;
+  supporters: number;
+  createdBy: string;
+  createdAt?: any;
+  verified?: boolean;
+  imageUrl?: string;
+}
 
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
   const [activeCategory, setActiveCategory] = useState(0);
   const controls = useAnimation();
-  const [wishes, setWishes] = useState<any[]>([]);
+  const [wishes, setWishes] = useState<Wish[]>([]);
   const [users, setUsers] = useState<{[uid: string]: any}>({});
 
   const { user } = useAuth();
@@ -84,7 +99,7 @@ export default function Home() {
     }, 4000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [features.length]);
 
   useEffect(() => {
     controls.start({
@@ -94,8 +109,8 @@ export default function Home() {
     });
   }, [activeFeature, controls]);
 
-  const [featuredWish, setFeaturedWish] = useState<any | null>(null);
-  const [stories, setStories] = useState<any[]>([]);
+  const [featuredWish, setFeaturedWish] = useState<Wish | null>(null);
+  const [stories, setStories] = useState<Wish[]>([]);
 
   useEffect(() => {
     // Fetch wishes from Firestore
@@ -234,16 +249,6 @@ export default function Home() {
     } finally {
       setSupportLoading(null);
     }
-  }
-
-  // Buy tokens handler (placeholder, just adds tokens for demo)
-  async function handleBuyTokens(amount: number) {
-    if (!user) return;
-    const userRef = doc(db, 'users', user.uid);
-    await updateDoc(userRef, { tokens: (userTokens || 0) + amount });
-    // Refresh user tokens
-    const userDoc = await getDoc(userRef);
-    setUsers((prev) => ({ ...prev, [user.uid]: userDoc.data() }));
   }
 
   return (

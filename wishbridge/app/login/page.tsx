@@ -20,8 +20,12 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Login failed");
+      } else {
+        setError("Login failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -34,8 +38,12 @@ export default function LoginPage() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message || "Google sign-in failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Google sign-in failed");
+      } else {
+        setError("Google sign-in failed");
+      }
     } finally {
       setLoading(false);
     }
