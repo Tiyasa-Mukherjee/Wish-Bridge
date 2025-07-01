@@ -3,13 +3,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, Gift, Plus, Menu, X } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 const navItems = [
 	{ label: 'Home', href: '/home' },
 	{ label: 'Explore', href: '/explore' },
 	{ label: 'How It Works', href: '/howitworks' },
-	{ label: 'About', href: '#about' },
-	{ label: 'Contact', href: '#contact' },
+	{ label: 'About', href: '/about' },
+	{ label: 'Contact', href: '/contact' },
 ];
 
 const searchExamples = [
@@ -21,6 +24,7 @@ const searchExamples = [
 ];
 
 export default function Header() {
+	const { user, loading } = useAuth();
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [searchIndex, setSearchIndex] = useState(0);
 	const [displayed, setDisplayed] = useState('');
@@ -87,8 +91,6 @@ export default function Header() {
 					))}
 				</motion.nav>
 
-				
-
 				{/* Desktop Actions */}
 				<motion.div className="hidden lg:flex items-center gap-3 flex-shrink-0">
 					<motion.button
@@ -98,14 +100,27 @@ export default function Header() {
 						<Heart className="text-rose-500" size={22} />
 						<span className="sr-only">Favorites</span>
 					</motion.button>
-					<motion.button
-						className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg hover:shadow-orange-200 transition-all"
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<User size={20} />
-						<span>Sign In</span>
-					</motion.button>
+					{!loading && !user ? (
+						<motion.button
+							className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg hover:shadow-orange-200 transition-all"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							onClick={() => (window.location.href = '/login')}
+						>
+							<User size={20} />
+							<span>Sign In</span>
+						</motion.button>
+					) : !loading && user ? (
+						<motion.button
+							className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg hover:shadow-orange-200 transition-all"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							onClick={() => signOut(auth)}
+						>
+							<User size={20} />
+							<span>Log Out</span>
+						</motion.button>
+					) : null}
 					<motion.button
 						className="primary-gradient text-white px-4 py-2 rounded-full font-medium"
 						whileHover={{ scale: 1.05 }}
@@ -178,9 +193,21 @@ export default function Header() {
 										{displayed === '' ? '\u00A0' : ''}
 									</span>
 								</div>
-								<button className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg">
-									<User size={20} /> Sign In
-								</button>
+								{!loading && !user ? (
+									<button
+										className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg"
+										onClick={() => (window.location.href = '/login')}
+									>
+										<User size={20} /> Sign In
+									</button>
+								) : !loading && user ? (
+									<button
+										className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg"
+										onClick={() => signOut(auth)}
+									>
+										<User size={20} /> Log Out
+									</button>
+								) : null}
 								<button className="primary-gradient text-white px-4 py-2 rounded-full font-medium">
 									Post a Wish
 								</button>

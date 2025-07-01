@@ -4,6 +4,8 @@ import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Gift, Heart, Star, ShieldCheck, Search, User, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, ShoppingBag, Palette, AlertTriangle, Bike, Laptop, GraduationCap } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import ProtectedRoute from "@/components/common/ProtectedRoute";
+
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
   const [activeCategory, setActiveCategory] = useState(0);
@@ -72,729 +74,731 @@ export default function Home() {
   }, [activeFeature, controls]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-orange-50 flex flex-col overflow-x-hidden">
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particleStyles.map((style, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={style}
-            animate={{
-              y: [0, (i % 2 === 0 ? 1 : -1) * 20],
-              x: [0, (i % 3 === 0 ? 1 : -1) * 20],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 12 + (i % 5),
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-      {/* Navbar Section */}
-      <Header />
-      
-
-      {/* Hero Section */}
-      <section className="relative w-full py-12 md:py-24 px-4 flex flex-col items-center justify-center">
-        <div className="absolute -top-20 right-0 w-72 h-72 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full blur-3xl opacity-30 -z-10"></div>
-        <div className="absolute -bottom-20 left-0 w-64 h-64 bg-gradient-to-r from-rose-300 to-orange-300 rounded-full blur-3xl opacity-30 -z-10"></div>
-        
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div 
-              className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Sparkles className="text-orange-500" size={20} />
-              <span className="text-orange-500 font-medium">Making dreams come true since 2024</span>
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight"
-            >
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                Where Kindness Connects Dreams
-              </span>
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.7 }}
-              className="text-lg text-gray-700 mb-8"
-            >
-              WishBridge brings together those in need and those who can help. Share your wish or grant someone's dream - anonymously or publicly.
-            </motion.p>
-            
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gradient-to-br from-rose-50 to-orange-50 flex flex-col overflow-x-hidden">
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {particleStyles.map((style, i) => (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="flex flex-wrap gap-4"
-            >
-              <motion.a 
-                href="#post"
-                className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Plus size={20} /> Post a Wish
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </motion.a>
-              
-              <motion.a 
-                href="#explore"
-                className="relative bg-white text-orange-500 border-2 border-orange-300 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Search size={20} /> Explore Wishes
-                </span>
-                <div className="absolute inset-0 bg-orange-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </motion.a>
-            </motion.div>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="relative bg-white rounded-2xl shadow-xl p-6 border border-orange-100">
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-bold text-sm">
-                Featured Wish
-              </div>
-              
-              <div className="flex items-start gap-4 mb-6">
-                <div className="bg-orange-100 rounded-full p-2">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-xl flex items-center gap-2">
-                    Laptop for Online Classes
-                    <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">Verified</span>
-                  </h3>
-                  <p className="text-orange-500 text-sm flex items-center gap-1">
-                    <GraduationCap size={16} /> Education
-                  </p>
-                </div>
-              </div>
-              
-              <p className="text-gray-700 mb-6">
-                "I'm a college student struggling to keep up with online classes. A laptop would help me complete assignments and attend lectures."
-              </p>
-              
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium text-gray-700">$420 raised of $800</span>
-                  <span className="text-sm font-medium text-orange-600">52%</span>
-                </div>
-                <div className="w-full bg-orange-100 rounded-full h-2.5">
-                  <motion.div 
-                    className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: '52%' }}
-                    transition={{ duration: 1.5 }}
-                  />
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 text-gray-500">
-                  <div className="flex -space-x-2">
-                    {[...Array(3)].map((_, i) => (
-                      <div key={i} className="w-8 h-8 bg-gray-200 border-2 border-white rounded-full" />
-                    ))}
-                  </div>
-                  <span>24 supporters</span>
-                </div>
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
-                >
-                  Grant Wish
-                </motion.button>
-              </div>
-            </div>
-            
-            <motion.div 
-              className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-orange-300 to-rose-300 rounded-xl blur-xl opacity-40 -z-10"
-              animate={{ 
-                rotate: [0, 5, 0, -5, 0],
+              key={i}
+              className="absolute rounded-full"
+              style={style}
+              animate={{
+                y: [0, (i % 2 === 0 ? 1 : -1) * 20],
+                x: [0, (i % 3 === 0 ? 1 : -1) * 20],
+                scale: [1, 1.2, 1],
               }}
-              transition={{ 
-                duration: 8,
+              transition={{
+                duration: 12 + (i % 5),
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
             />
-          </motion.div>
+          ))}
         </div>
-      </section>
+        {/* Navbar Section */}
+        <Header />
+        
 
-      {/* Categories Section */}
-      <section className="w-full py-12 md:py-20 px-4 bg-gradient-to-br from-white to-orange-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                Wish Categories
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover wishes that resonate with your desire to help. Filter by category to find what moves you.
-            </p>
-          </motion.div>
+        {/* Hero Section */}
+        <section className="relative w-full py-12 md:py-24 px-4 flex flex-col items-center justify-center">
+          <div className="absolute -top-20 right-0 w-72 h-72 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full blur-3xl opacity-30 -z-10"></div>
+          <div className="absolute -bottom-20 left-0 w-64 h-64 bg-gradient-to-r from-rose-300 to-orange-300 rounded-full blur-3xl opacity-30 -z-10"></div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map((category, i) => (
-              <motion.button
-                key={i}
-                className={`flex flex-col items-center justify-center p-6 rounded-2xl transition-all ${
-                  activeCategory === i 
-                    ? 'bg-gradient-to-br from-orange-100 to-rose-100 border-2 border-orange-300 shadow-md' 
-                    : 'bg-white hover:bg-orange-50 border border-orange-100'
-                }`}
-                onClick={() => setActiveCategory(i)}
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div 
+                className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6"
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
               >
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 ${
-                  activeCategory === i 
-                    ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
-                    : 'bg-orange-100 text-orange-500'
-                }`}>
-                  {category.icon}
-                </div>
-                <span className="font-medium text-gray-800">{category.name}</span>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Wishes */}
-      <section id="explore" className="w-full py-12 md:py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="flex justify-between items-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-2">
+                <Sparkles className="text-orange-500" size={20} />
+                <span className="text-orange-500 font-medium">Making dreams come true since 2024</span>
+              </motion.div>
+              
+              <motion.h1
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight"
+              >
                 <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                  Featured Wishes
+                  Where Kindness Connects Dreams
                 </span>
-              </h2>
-              <p className="text-gray-600">Wishes that need your support right now</p>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 text-orange-500 font-medium"
-            >
-              View all wishes <ChevronRight size={18} />
-            </motion.button>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Bicycle for School Commute",
-                category: "Education",
-                icon: <Bike className="text-orange-500" size={20} />,
-                description: "I walk 5km daily to school. A bicycle would save time and energy for studying.",
-                target: 120,
-                raised: 75,
-                supporters: 12
-              },
-              {
-                title: "Medical Treatment for Dog",
-                category: "Emergency",
-                icon: <AlertTriangle className="text-rose-500" size={20} />,
-                description: "My dog needs surgery after an accident. Help us save our family member.",
-                target: 800,
-                raised: 420,
-                supporters: 18,
-                verified: true
-              },
-              {
-                title: "Art Supplies for Community Class",
-                category: "Dreams",
-                icon: <Palette className="text-orange-500" size={20} />,
-                description: "Supplies for free art classes for underprivileged children in our neighborhood.",
-                target: 200,
-                raised: 90,
-                supporters: 8
-              }
-            ].map((wish, i) => (
-              <motion.div
-                key={i}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                whileHover={{ y: -10 }}
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.7 }}
+                className="text-lg text-gray-700 mb-8"
               >
-                <div className="h-48 bg-gray-200 border-2 border-dashed" />
-                
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-bold text-xl">{wish.title}</h3>
-                    {wish.verified && (
-                      <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
-                        Verified
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-orange-500 mb-3">
-                    {wish.icon}
-                    <span>{wish.category}</span>
-                  </div>
-                  
-                  <p className="text-gray-700 mb-6">{wish.description}</p>
-                  
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-700">${wish.raised} raised of ${wish.target}</span>
-                      <span className="text-sm font-medium text-orange-600">
-                        {Math.round((wish.raised / wish.target) * 100)}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-orange-100 rounded-full h-2.5">
-                      <motion.div 
-                        className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${(wish.raised / wish.target) * 100}%` }}
-                        transition={{ duration: 1.5 }}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-gray-500">
-                      <div className="flex -space-x-2">
-                        {[...Array(3)].map((_, j) => (
-                          <div key={j} className="w-6 h-6 bg-gray-200 border-2 border-white rounded-full" />
-                        ))}
-                      </div>
-                      <span>{wish.supporters} supporters</span>
-                    </div>
-                    
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
-                    >
-                      Support Wish
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-rose-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
-                How WishBridge Works
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              A seamless journey from wish to fulfillment. Our platform makes generosity simple and impactful.
-            </p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-1 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full hidden md:block"></div>
-            
-            {[
-              {
-                icon: <Gift className="text-white" size={32} />,
-                title: "Post a Wish",
-                description: "Sign up, share your story, and let the world know what you need—be it education, essentials, or a dream.",
-                color: "from-orange-400 to-orange-500"
-              },
-              {
-                icon: <ShieldCheck className="text-white" size={32} />,
-                title: "Verified & Safe",
-                description: "Our team and AI ensure every wish is genuine. Look for the Trust Badge for verified wishes.",
-                color: "from-rose-400 to-rose-500"
-              },
-              {
-                icon: <Heart className="text-white" size={32} />,
-                title: "Grant a Wish",
-                description: "Browse, filter, and grant wishes—anonymously or publicly. Track your impact and earn karma points!",
-                color: "from-orange-400 to-rose-400"
-              }
-            ].map((item, i) => (
+                WishBridge brings together those in need and those who can help. Share your wish or grant someone's dream - anonymously or publicly.
+              </motion.p>
+              
               <motion.div
-                key={i}
-                className="relative bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center text-center border border-orange-100 z-10"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                whileHover={{ y: -10 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="flex flex-wrap gap-4"
               >
-                <div className={`absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-gradient-to-r ${item.color} flex items-center justify-center shadow-lg`}>
-                  {item.icon}
-                </div>
-                <h3 className="text-xl font-bold mt-8 mb-4">{item.title}</h3>
-                <p className="text-gray-600 mb-6">{item.description}</p>
-                <motion.div 
-                  className="text-xs font-medium text-orange-500 flex items-center gap-1"
-                  whileHover={{ gap: 4 }}
-                >
-                  Learn more <ChevronRight size={16} />
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="w-full py-12 md:py-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                Why Choose WishBridge?
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              We're redefining generosity with technology, trust, and heartfelt connections.
-            </p>
-          </motion.div>
-          
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="md:w-1/3">
-              <div className="bg-white rounded-2xl shadow-xl p-6 h-full">
-                <h3 className="text-xl font-bold mb-6 text-gray-800">Our Features</h3>
-                <div className="space-y-4">
-                  {features.map((feature, i) => (
-                    <motion.div
-                      key={i}
-                      className={`p-4 rounded-xl cursor-pointer transition-all ${
-                        activeFeature === i 
-                          ? 'bg-gradient-to-r from-orange-50 to-rose-50 border border-orange-200 shadow-sm' 
-                          : 'hover:bg-orange-50'
-                      }`}
-                      onClick={() => setActiveFeature(i)}
-                      whileHover={{ x: 5 }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${
-                          activeFeature === i 
-                            ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
-                            : 'bg-orange-100 text-orange-500'
-                        }`}>
-                          {feature.icon}
-                        </div>
-                        <span className={`font-medium ${
-                          activeFeature === i ? 'text-orange-600' : 'text-gray-700'
-                        }`}>
-                          {feature.title}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            <motion.div 
-              className="md:w-2/3 bg-gradient-to-br from-orange-50 to-rose-50 rounded-2xl shadow-xl p-8 flex items-center justify-center relative overflow-hidden"
-              animate={controls}
-              initial={{ opacity: 0, y: 20 }}
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-rose-400"></div>
-              <div className="text-center max-w-md">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-400 to-rose-400 rounded-xl flex items-center justify-center mx-auto mb-6 text-white">
-                  {features[activeFeature].icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">
-                  {features[activeFeature].title}
-                </h3>
-                <p className="text-gray-600 mb-8">
-                  {features[activeFeature].description}
-                </p>
-                <motion.button
+                <motion.a 
+                  href="#post"
+                  className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-medium shadow-lg"
                 >
-                  Learn More
-                </motion.button>
-              </div>
-              
-              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
-                {features.map((_, i) => (
-                  <button 
-                    key={i}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      activeFeature === i 
-                        ? 'bg-gradient-to-r from-orange-500 to-rose-500' 
-                        : 'bg-orange-200'
-                    }`}
-                    onClick={() => setActiveFeature(i)}
-                  />
-                ))}
-              </div>
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Plus size={20} /> Post a Wish
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </motion.a>
+                
+                <motion.a 
+                  href="#explore"
+                  className="relative bg-white text-orange-500 border-2 border-orange-300 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Search size={20} /> Explore Wishes
+                  </span>
+                  <div className="absolute inset-0 bg-orange-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </motion.a>
+              </motion.div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
-                Heartwarming Stories
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover how WishBridge has transformed lives and created moments of joy.
-            </p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah Johnson",
-                role: "Wish Recipient",
-                quote: "Thanks to a kind stranger on WishBridge, I received the laptop I needed for my studies. This platform restored my faith in humanity!",
-                color: "bg-orange-100"
-              },
-              {
-                name: "Michael Rodriguez",
-                role: "Wish Granter",
-                quote: "Granting wishes on WishBridge has been incredibly fulfilling. Seeing the impact photos makes every donation worthwhile.",
-                color: "bg-rose-100"
-              },
-              {
-                name: "Emma Thompson",
-                role: "Wish Recipient",
-                quote: "When our house burned down, WishBridge connected us with people who helped us rebuild our lives. Forever grateful!",
-                color: "bg-orange-100"
-              }
-            ].map((testimonial, i) => (
-              <motion.div
-                key={i}
-                className={`${testimonial.color} rounded-2xl shadow-lg p-8 relative overflow-hidden`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-              >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-r from-orange-300 to-rose-300 rounded-bl-full opacity-20"></div>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-rose-400 rounded-full flex items-center justify-center text-white">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h4 className="font-bold">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-600">{testimonial.role}</p>
-                    </div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative bg-white rounded-2xl shadow-xl p-6 border border-orange-100">
+                <div className="absolute -top-4 -right-4 bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-bold text-sm">
+                  Featured Wish
+                </div>
+                
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="bg-orange-100 rounded-full p-2">
+                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
                   </div>
-                  <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, j) => (
-                      <Star 
-                        key={j} 
-                        className={j < 4 ? "text-orange-500 fill-current" : "text-orange-300"} 
-                        size={16} 
-                      />
-                    ))}
+                  <div>
+                    <h3 className="font-bold text-xl flex items-center gap-2">
+                      Laptop for Online Classes
+                      <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">Verified</span>
+                    </h3>
+                    <p className="text-orange-500 text-sm flex items-center gap-1">
+                      <GraduationCap size={16} /> Education
+                    </p>
                   </div>
                 </div>
-              </motion.div>
-            ))}
+                
+                <p className="text-gray-700 mb-6">
+                  "I'm a college student struggling to keep up with online classes. A laptop would help me complete assignments and attend lectures."
+                </p>
+                
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-700">$420 raised of $800</span>
+                    <span className="text-sm font-medium text-orange-600">52%</span>
+                  </div>
+                  <div className="w-full bg-orange-100 rounded-full h-2.5">
+                    <motion.div 
+                      className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: '52%' }}
+                      transition={{ duration: 1.5 }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <div className="flex -space-x-2">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="w-8 h-8 bg-gray-200 border-2 border-white rounded-full" />
+                      ))}
+                    </div>
+                    <span>24 supporters</span>
+                  </div>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                  >
+                    Grant Wish
+                  </motion.button>
+                </div>
+              </div>
+              
+              <motion.div 
+                className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-orange-300 to-rose-300 rounded-xl blur-xl opacity-40 -z-10"
+                animate={{ 
+                  rotate: [0, 5, 0, -5, 0],
+                }}
+                transition={{ 
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Final CTA */}
-      <motion.section
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-        className="w-full py-16 px-4"
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-3xl p-10 text-white text-center shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full opacity-10">
-              <div className="absolute -top-20 -left-20 w-64 h-64 bg-white rounded-full"></div>
-              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white rounded-full"></div>
-            </div>
-            
+        {/* Categories Section */}
+        <section className="w-full py-12 md:py-20 px-4 bg-gradient-to-br from-white to-orange-50">
+          <div className="max-w-6xl mx-auto">
             <motion.div 
-              className="relative z-10"
+              className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+              transition={{ duration: 0.6 }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Make Magic Happen?</h2>
-              <p className="max-w-2xl mx-auto mb-8">
-                Join our community of dream-makers and experience the joy of giving and receiving.
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                  Wish Categories
+                </span>
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Discover wishes that resonate with your desire to help. Filter by category to find what moves you.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <motion.a 
-                  href="#"
-                  className="bg-white text-orange-500 px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-orange-50 transition-all group"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    Become a Donor <Heart className="text-rose-500" size={20} />
-                  </span>
-                </motion.a>
-                <motion.a 
-                  href="#"
-                  className="bg-transparent border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all group"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    Post a Wish <Gift className="text-orange-300" size={20} />
-                  </span>
-                </motion.a>
-              </div>
             </motion.div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {categories.map((category, i) => (
+                <motion.button
+                  key={i}
+                  className={`flex flex-col items-center justify-center p-6 rounded-2xl transition-all ${
+                    activeCategory === i 
+                      ? 'bg-gradient-to-br from-orange-100 to-rose-100 border-2 border-orange-300 shadow-md' 
+                      : 'bg-white hover:bg-orange-50 border border-orange-100'
+                  }`}
+                  onClick={() => setActiveCategory(i)}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 ${
+                    activeCategory === i 
+                      ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
+                      : 'bg-orange-100 text-orange-500'
+                  }`}>
+                    {category.icon}
+                  </div>
+                  <span className="font-medium text-gray-800">{category.name}</span>
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </div>
-      </motion.section>
+        </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-orange-100 py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-5 gap-8 mb-12">
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-6">
-                <Gift className="text-orange-500" size={32} />
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                  WishBridge
-                </h3>
+        {/* Featured Wishes */}
+        <section id="explore" className="w-full py-12 md:py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <motion.div 
+              className="flex justify-between items-center mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-2">
+                  <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                    Featured Wishes
+                  </span>
+                </h2>
+                <p className="text-gray-600">Wishes that need your support right now</p>
               </div>
-              <p className="text-gray-600 max-w-md mb-6">
-                Connecting dreams with generosity. A platform where wishes find their guardians and kindness transforms lives.
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-2 text-orange-500 font-medium"
+              >
+                View all wishes <ChevronRight size={18} />
+              </motion.button>
+            </motion.div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Bicycle for School Commute",
+                  category: "Education",
+                  icon: <Bike className="text-orange-500" size={20} />,
+                  description: "I walk 5km daily to school. A bicycle would save time and energy for studying.",
+                  target: 120,
+                  raised: 75,
+                  supporters: 12
+                },
+                {
+                  title: "Medical Treatment for Dog",
+                  category: "Emergency",
+                  icon: <AlertTriangle className="text-rose-500" size={20} />,
+                  description: "My dog needs surgery after an accident. Help us save our family member.",
+                  target: 800,
+                  raised: 420,
+                  supporters: 18,
+                  verified: true
+                },
+                {
+                  title: "Art Supplies for Community Class",
+                  category: "Dreams",
+                  icon: <Palette className="text-orange-500" size={20} />,
+                  description: "Supplies for free art classes for underprivileged children in our neighborhood.",
+                  target: 200,
+                  raised: 90,
+                  supporters: 8
+                }
+              ].map((wish, i) => (
+                <motion.div
+                  key={i}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <div className="h-48 bg-gray-200 border-2 border-dashed" />
+                  
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-bold text-xl">{wish.title}</h3>
+                      {wish.verified && (
+                        <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
+                          Verified
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-orange-500 mb-3">
+                      {wish.icon}
+                      <span>{wish.category}</span>
+                    </div>
+                    
+                    <p className="text-gray-700 mb-6">{wish.description}</p>
+                    
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm font-medium text-gray-700">${wish.raised} raised of ${wish.target}</span>
+                        <span className="text-sm font-medium text-orange-600">
+                          {Math.round((wish.raised / wish.target) * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-orange-100 rounded-full h-2.5">
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-orange-400 to-rose-400 rounded-full"
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${(wish.raised / wish.target) * 100}%` }}
+                          transition={{ duration: 1.5 }}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2 text-gray-500">
+                        <div className="flex -space-x-2">
+                          {[...Array(3)].map((_, j) => (
+                            <div key={j} className="w-6 h-6 bg-gray-200 border-2 border-white rounded-full" />
+                          ))}
+                        </div>
+                        <span>{wish.supporters} supporters</span>
+                      </div>
+                      
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
+                      >
+                        Support Wish
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-rose-50">
+          <div className="max-w-6xl mx-auto">
+            <motion.div 
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
+                  How WishBridge Works
+                </span>
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                A seamless journey from wish to fulfillment. Our platform makes generosity simple and impactful.
               </p>
-              <div className="flex gap-4">
-                {[
-                  { icon: <Twitter className="text-orange-500" size={20} />, url: "#" },
-                  { icon: <Facebook className="text-orange-500" size={20} />, url: "#" },
-                  { icon: <Instagram className="text-orange-500" size={20} />, url: "#" },
-                  { icon: <Mail className="text-orange-500" size={20} />, url: "#" }
-                ].map((social, i) => (
-                  <motion.a
-                    key={i}
-                    href={social.url}
-                    className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center hover:bg-orange-200 transition-colors"
-                    whileHover={{ y: -5 }}
+            </motion.div>
+            
+            <div className="grid md:grid-cols-3 gap-8 relative">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-1 bg-gradient-to-r from-orange-300 to-rose-300 rounded-full hidden md:block"></div>
+              
+              {[
+                {
+                  icon: <Gift className="text-white" size={32} />,
+                  title: "Post a Wish",
+                  description: "Sign up, share your story, and let the world know what you need—be it education, essentials, or a dream.",
+                  color: "from-orange-400 to-orange-500"
+                },
+                {
+                  icon: <ShieldCheck className="text-white" size={32} />,
+                  title: "Verified & Safe",
+                  description: "Our team and AI ensure every wish is genuine. Look for the Trust Badge for verified wishes.",
+                  color: "from-rose-400 to-rose-500"
+                },
+                {
+                  icon: <Heart className="text-white" size={32} />,
+                  title: "Grant a Wish",
+                  description: "Browse, filter, and grant wishes—anonymously or publicly. Track your impact and earn karma points!",
+                  color: "from-orange-400 to-rose-400"
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  className="relative bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center text-center border border-orange-100 z-10"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <div className={`absolute -top-6 left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-gradient-to-r ${item.color} flex items-center justify-center shadow-lg`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mt-8 mb-4">{item.title}</h3>
+                  <p className="text-gray-600 mb-6">{item.description}</p>
+                  <motion.div 
+                    className="text-xs font-medium text-orange-500 flex items-center gap-1"
+                    whileHover={{ gap: 4 }}
                   >
-                    {social.icon}
-                  </motion.a>
-                ))}
+                    Learn more <ChevronRight size={16} />
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="w-full py-12 md:py-24 px-4">
+          <div className="max-w-6xl mx-auto">
+            <motion.div 
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                  Why Choose WishBridge?
+                </span>
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                We're redefining generosity with technology, trust, and heartfelt connections.
+              </p>
+            </motion.div>
+            
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="md:w-1/3">
+                <div className="bg-white rounded-2xl shadow-xl p-6 h-full">
+                  <h3 className="text-xl font-bold mb-6 text-gray-800">Our Features</h3>
+                  <div className="space-y-4">
+                    {features.map((feature, i) => (
+                      <motion.div
+                        key={i}
+                        className={`p-4 rounded-xl cursor-pointer transition-all ${
+                          activeFeature === i 
+                            ? 'bg-gradient-to-r from-orange-50 to-rose-50 border border-orange-200 shadow-sm' 
+                            : 'hover:bg-orange-50'
+                        }`}
+                        onClick={() => setActiveFeature(i)}
+                        whileHover={{ x: 5 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${
+                            activeFeature === i 
+                              ? 'bg-gradient-to-r from-orange-400 to-rose-400 text-white' 
+                              : 'bg-orange-100 text-orange-500'
+                          }`}>
+                            {feature.icon}
+                          </div>
+                          <span className={`font-medium ${
+                            activeFeature === i ? 'text-orange-600' : 'text-gray-700'
+                          }`}>
+                            {feature.title}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               </div>
+              
+              <motion.div 
+                className="md:w-2/3 bg-gradient-to-br from-orange-50 to-rose-50 rounded-2xl shadow-xl p-8 flex items-center justify-center relative overflow-hidden"
+                animate={controls}
+                initial={{ opacity: 0, y: 20 }}
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-rose-400"></div>
+                <div className="text-center max-w-md">
+                  <div className="w-16 h-16 bg-gradient-to-r from-orange-400 to-rose-400 rounded-xl flex items-center justify-center mx-auto mb-6 text-white">
+                    {features[activeFeature].icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                    {features[activeFeature].title}
+                  </h3>
+                  <p className="text-gray-600 mb-8">
+                    {features[activeFeature].description}
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-gradient-to-r from-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-medium shadow-lg"
+                  >
+                    Learn More
+                  </motion.button>
+                </div>
+                
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
+                  {features.map((_, i) => (
+                    <button 
+                      key={i}
+                      className={`w-3 h-3 rounded-full transition-colors ${
+                        activeFeature === i 
+                          ? 'bg-gradient-to-r from-orange-500 to-rose-500' 
+                          : 'bg-orange-200'
+                      }`}
+                      onClick={() => setActiveFeature(i)}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="w-full py-12 md:py-24 px-4 bg-gradient-to-br from-white to-orange-50">
+          <div className="max-w-6xl mx-auto">
+            <motion.div 
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-rose-500 to-orange-500 bg-clip-text text-transparent">
+                  Heartwarming Stories
+                </span>
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Discover how WishBridge has transformed lives and created moments of joy.
+              </p>
+            </motion.div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "Sarah Johnson",
+                  role: "Wish Recipient",
+                  quote: "Thanks to a kind stranger on WishBridge, I received the laptop I needed for my studies. This platform restored my faith in humanity!",
+                  color: "bg-orange-100"
+                },
+                {
+                  name: "Michael Rodriguez",
+                  role: "Wish Granter",
+                  quote: "Granting wishes on WishBridge has been incredibly fulfilling. Seeing the impact photos makes every donation worthwhile.",
+                  color: "bg-rose-100"
+                },
+                {
+                  name: "Emma Thompson",
+                  role: "Wish Recipient",
+                  quote: "When our house burned down, WishBridge connected us with people who helped us rebuild our lives. Forever grateful!",
+                  color: "bg-orange-100"
+                }
+              ].map((testimonial, i) => (
+                <motion.div
+                  key={i}
+                  className={`${testimonial.color} rounded-2xl shadow-lg p-8 relative overflow-hidden`}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.2 }}
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-r from-orange-300 to-rose-300 rounded-bl-full opacity-20"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-rose-400 rounded-full flex items-center justify-center text-white">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-bold">{testimonial.name}</h4>
+                        <p className="text-sm text-gray-600">{testimonial.role}</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, j) => (
+                        <Star 
+                          key={j} 
+                          className={j < 4 ? "text-orange-500 fill-current" : "text-orange-300"} 
+                          size={16} 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <motion.section
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.6 }}
+          className="w-full py-16 px-4"
+        >
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-3xl p-10 text-white text-center shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                <div className="absolute -top-20 -left-20 w-64 h-64 bg-white rounded-full"></div>
+                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white rounded-full"></div>
+              </div>
+              
+              <motion.div 
+                className="relative z-10"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+              >
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Make Magic Happen?</h2>
+                <p className="max-w-2xl mx-auto mb-8">
+                  Join our community of dream-makers and experience the joy of giving and receiving.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <motion.a 
+                    href="#"
+                    className="bg-white text-orange-500 px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-orange-50 transition-all group"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Become a Donor <Heart className="text-rose-500" size={20} />
+                    </span>
+                  </motion.a>
+                  <motion.a 
+                    href="#"
+                    className="bg-transparent border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all group"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Post a Wish <Gift className="text-orange-300" size={20} />
+                    </span>
+                  </motion.a>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Footer */}
+        <footer className="bg-white border-t border-orange-100 py-12 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-5 gap-8 mb-12">
+              <div className="md:col-span-2">
+                <div className="flex items-center gap-3 mb-6">
+                  <Gift className="text-orange-500" size={32} />
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
+                    WishBridge
+                  </h3>
+                </div>
+                <p className="text-gray-600 max-w-md mb-6">
+                  Connecting dreams with generosity. A platform where wishes find their guardians and kindness transforms lives.
+                </p>
+                <div className="flex gap-4">
+                  {[
+                    { icon: <Twitter className="text-orange-500" size={20} />, url: "#" },
+                    { icon: <Facebook className="text-orange-500" size={20} />, url: "#" },
+                    { icon: <Instagram className="text-orange-500" size={20} />, url: "#" },
+                    { icon: <Mail className="text-orange-500" size={20} />, url: "#" }
+                  ].map((social, i) => (
+                    <motion.a
+                      key={i}
+                      href={social.url}
+                      className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center hover:bg-orange-200 transition-colors"
+                      whileHover={{ y: -5 }}
+                    >
+                      {social.icon}
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+              
+              {[
+                {
+                  title: "Platform",
+                  links: ["Explore Wishes", "How It Works", "Success Stories", "For Businesses"]
+                },
+                {
+                  title: "Company",
+                  links: ["About Us", "Careers", "Press", "Contact"]
+                },
+                {
+                  title: "Resources",
+                  links: ["Help Center", "Blog", "Trust & Safety", "FAQ"]
+                }
+              ].map((column, i) => (
+                <div key={i}>
+                  <h4 className="text-lg font-bold mb-6 text-gray-800">{column.title}</h4>
+                  <ul className="space-y-3">
+                    {column.links.map((link, j) => (
+                      <li key={j}>
+                        <a 
+                          href="#" 
+                          className="text-gray-600 hover:text-orange-500 transition-colors"
+                        >
+                          {link}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
             
-            {[
-              {
-                title: "Platform",
-                links: ["Explore Wishes", "How It Works", "Success Stories", "For Businesses"]
-              },
-              {
-                title: "Company",
-                links: ["About Us", "Careers", "Press", "Contact"]
-              },
-              {
-                title: "Resources",
-                links: ["Help Center", "Blog", "Trust & Safety", "FAQ"]
-              }
-            ].map((column, i) => (
-              <div key={i}>
-                <h4 className="text-lg font-bold mb-6 text-gray-800">{column.title}</h4>
-                <ul className="space-y-3">
-                  {column.links.map((link, j) => (
-                    <li key={j}>
-                      <a 
-                        href="#" 
-                        className="text-gray-600 hover:text-orange-500 transition-colors"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="pt-8 border-t border-orange-100 text-center text-gray-600">
+              <p>
+                © {new Date().getFullYear()} WishBridge. Making wishes come true, one gift at a time.
+              </p>
+            </div>
           </div>
-          
-          <div className="pt-8 border-t border-orange-100 text-center text-gray-600">
-            <p>
-              © {new Date().getFullYear()} WishBridge. Making wishes come true, one gift at a time.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </ProtectedRoute>
   );
 }
