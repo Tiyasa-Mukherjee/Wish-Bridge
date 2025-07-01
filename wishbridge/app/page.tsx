@@ -31,9 +31,8 @@ export default function Home() {
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length);
     }, 3000);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [features.length]);
 
   useEffect(() => {
     controls.start({
@@ -126,7 +125,7 @@ export default function Home() {
             transition={{ delay: 0.4, duration: 0.7 }}
             className="text-xl text-gray-700 max-w-2xl mb-10"
           >
-            A revolutionary platform where generosity meets aspiration. Post your wish, grant someone's dream, and create meaningful connections.
+            A revolutionary platform where generosity meets aspiration. Post your wish, grant someone&apos;s dream, and create meaningful connections.
           </motion.p>
 
           <motion.div
@@ -257,7 +256,7 @@ export default function Home() {
                   {item.icon}
                 </div>
                 <h3 className="text-xl font-bold mt-8 mb-4">{item.title}</h3>
-                <p className="text-gray-600 mb-6">{item.description}</p>
+                <p className="text-gray-600 mb-6">{item.description.replace("'", "&apos;")}</p>
                 <motion.div
                   className="text-xs font-medium text-orange-500 flex items-center gap-1"
                   whileHover={{ gap: 4 }}
@@ -293,7 +292,7 @@ export default function Home() {
               </span>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              We're redefining generosity with technology, trust, and heartfelt connections.
+              We&apos;re redefining generosity with technology, trust, and heartfelt connections.
             </p>
           </motion.div>
 
@@ -322,7 +321,7 @@ export default function Home() {
                         <div className="bg-orange-100 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
                           <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                         </div>
-                        <span>{item}</span>
+                        <span>{item.replace("'", "&apos;")}</span>
                       </li>
                     ))}
                   </ul>
@@ -354,7 +353,7 @@ export default function Home() {
                         <div className="bg-rose-100 w-6 h-6 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
                           <div className="w-2 h-2 bg-rose-500 rounded-full"></div>
                         </div>
-                        <span>{item}</span>
+                        <span>{item.replace("'", "&apos;")}</span>
                       </li>
                     ))}
                   </ul>
@@ -438,7 +437,7 @@ export default function Home() {
                   {features[activeFeature].title}
                 </h3>
                 <p className="text-gray-600 mb-8">
-                  {features[activeFeature].description}
+                  {features[activeFeature].description.replace("'", "&apos;")}
                 </p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -532,7 +531,7 @@ export default function Home() {
                       <p className="text-sm text-gray-600">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
+                  <p className="text-gray-700 italic mb-6">&quot;{testimonial.quote}&quot;</p>
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, j) => (
                       <Star

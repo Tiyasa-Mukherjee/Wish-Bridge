@@ -21,7 +21,7 @@ interface Wish {
   raisedAmount: number;
   supporters: number;
   createdBy: string;
-  createdAt?: any;
+  createdAt?: Date | string | null;
   verified?: boolean;
   imageUrl?: string;
 }
@@ -47,13 +47,17 @@ export default function Explore() {
 	const { user } = useAuth();
 	const [activeCategory, setActiveCategory] = useState(-1);
 	const [wishes, setWishes] = useState<Wish[]>([]);
-	const [users, setUsers] = useState<{ [uid: string]: any }>({});
+interface UserData {
+  displayName?: string;
+  // Add more user fields as needed
+}
+const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
 	const [loading, setLoading] = useState(true);
 	const [sortBy, setSortBy] = useState("newest");
 	const [editWishId, setEditWishId] = useState<string | null>(null);
 	const [editFields, setEditFields] = useState<Partial<Wish>>({});
 	const [editLoading, setEditLoading] = useState(false);
-	const [editError, setEditError] = useState('');
+  const [editError, setEditError] = useState<string>('');
 
 	useEffect(() => {
 		async function fetchWishes() {
@@ -69,12 +73,12 @@ export default function Explore() {
 			});
 			setWishes(wishList);
 			// Fetch user info for wish creators
-			const userMap: { [uid: string]: any } = {};
+	  const userMap: { [uid: string]: UserData } = {};
 			await Promise.all(
-				Array.from(userIds).map(async (uid) => {
-					const userDoc = await getDoc(doc(db, "users", uid));
-					if (userDoc.exists()) userMap[uid] = userDoc.data();
-				})
+		Array.from(userIds).map(async (uid) => {
+		  const userDoc = await getDoc(doc(db, "users", uid));
+		  if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
+		})
 			);
 			setUsers(userMap);
 			setLoading(false);
@@ -107,7 +111,7 @@ export default function Explore() {
 	});
 
 	// Edit wish handler
-	async function handleEditWishSubmit(e: React.FormEvent) {
+  async function handleEditWishSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if (!editWishId) return;
 		setEditLoading(true);
@@ -134,12 +138,12 @@ export default function Explore() {
 				if (data.createdBy) userIds.add(data.createdBy);
 			});
 			setWishes(wishList);
-			const userMap: { [uid: string]: any } = {};
+	  const userMap: { [uid: string]: UserData } = {};
 			await Promise.all(
-				Array.from(userIds).map(async (uid) => {
-					const userDoc = await getDoc(doc(db, 'users', uid));
-					if (userDoc.exists()) userMap[uid] = userDoc.data();
-				})
+		Array.from(userIds).map(async (uid) => {
+		  const userDoc = await getDoc(doc(db, 'users', uid));
+		  if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
+		})
 			);
 			setUsers(userMap);
 		} catch (err: unknown) {
@@ -357,9 +361,9 @@ export default function Explore() {
 								transition={{ delay: 0.3 }}
 							>
 								<h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Make a Difference?</h2>
-								<p className="max-w-2xl mx-auto mb-8">
-									Join our community of wish granters and bring joy to someone's life today.
-								</p>
+				<p className="max-w-2xl mx-auto mb-8">
+				  Join our community of wish granters and bring joy to someone&apos;s life today.
+				</p>
 								<div className="flex flex-col sm:flex-row justify-center gap-4">
 									<motion.a
 										href="#"

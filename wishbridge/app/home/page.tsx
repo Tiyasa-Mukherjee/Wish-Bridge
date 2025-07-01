@@ -2,6 +2,7 @@
 
 import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import ProtectedRoute from "@/components/common/ProtectedRoute";
@@ -19,9 +20,15 @@ interface Wish {
   raisedAmount: number;
   supporters: number;
   createdBy: string;
-  createdAt?: any;
+  createdAt?: Date | string | null;
   verified?: boolean;
   imageUrl?: string;
+}
+
+interface UserData {
+  displayName?: string;
+  tokens?: number;
+  [key: string]: unknown;
 }
 
 export default function Home() {
@@ -29,7 +36,7 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState(0);
   const controls = useAnimation();
   const [wishes, setWishes] = useState<Wish[]>([]);
-  const [users, setUsers] = useState<{[uid: string]: any}>({});
+  const [users, setUsers] = useState<{[uid: string]: UserData}>({});
 
   const { user } = useAuth();
   const [showPostModal, setShowPostModal] = useState(false);
@@ -117,24 +124,24 @@ export default function Home() {
     async function fetchWishes() {
       const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'), limit(12));
       const wishesSnap = await getDocs(wishesQuery);
-      const wishList: any[] = [];
+      const wishList: Wish[] = [];
       const userIds = new Set<string>();
-      wishesSnap.forEach(doc => {
-        const data = doc.data();
-        wishList.push({ id: doc.id, ...data });
+      wishesSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        wishList.push({ id: docSnap.id, ...data } as Wish);
         if (data.createdBy) userIds.add(data.createdBy);
       });
       setWishes(wishList);
       // Fetch user info for wish creators
-      const userMap: {[uid: string]: any} = {};
+      const userMap: { [uid: string]: UserData } = {};
       await Promise.all(Array.from(userIds).map(async (uid) => {
         const userDoc = await getDoc(doc(db, 'users', uid));
-        if (userDoc.exists()) userMap[uid] = userDoc.data();
+        if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
       }));
       setUsers(userMap);
 
       // Featured Wish: pick the wish with highest percent funded, else most recent
-      let featured = null;
+      let featured: Wish | null = null;
       if (wishList.length > 0) {
         featured = wishList.reduce((prev, curr) => {
           const prevPct = (prev.raisedAmount || 0) / (prev.targetAmount || 1);
@@ -151,7 +158,7 @@ export default function Home() {
     fetchWishes();
   }, []);
 
-  async function handlePostWish(e: React.FormEvent) {
+  async function handlePostWish(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPostLoading(true);
     setPostError('');
@@ -175,23 +182,23 @@ export default function Home() {
       // Refresh wishes
       const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'), limit(12));
       const wishesSnap = await getDocs(wishesQuery);
-      const wishList: any[] = [];
+      const wishList: Wish[] = [];
       const userIds = new Set<string>();
-      wishesSnap.forEach(doc => {
-        const data = doc.data();
-        wishList.push({ id: doc.id, ...data });
+      wishesSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        wishList.push({ id: docSnap.id, ...data } as Wish);
         if (data.createdBy) userIds.add(data.createdBy);
       });
       setWishes(wishList);
       // Fetch user info for wish creators
-      const userMap: {[uid: string]: any} = {};
+      const userMap: { [uid: string]: UserData } = {};
       await Promise.all(Array.from(userIds).map(async (uid) => {
         const userDoc = await getDoc(doc(db, 'users', uid));
-        if (userDoc.exists()) userMap[uid] = userDoc.data();
+        if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
       }));
       setUsers(userMap);
-    } catch (err: any) {
-      setPostError(err.message || 'Failed to post wish');
+    } catch (err) {
+      setPostError((err as Error).message || 'Failed to post wish');
     } finally {
       setPostLoading(false);
     }
@@ -201,7 +208,7 @@ export default function Home() {
   const userTokens = users[user?.uid || '']?.tokens || 0;
 
   // Support Wish handler
-  async function handleSupportWish(wish: any, amount: number) {
+  async function handleSupportWish(wish: Wish, amount: number) {
     setSupportLoading(wish.id);
     setSupportError('');
     try {
@@ -230,22 +237,22 @@ export default function Home() {
       // Refresh wishes and users
       const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'), limit(12));
       const wishesSnap = await getDocs(wishesQuery);
-      const wishList: any[] = [];
+      const wishList: Wish[] = [];
       const userIds = new Set<string>();
-      wishesSnap.forEach(doc => {
-        const data = doc.data();
-        wishList.push({ id: doc.id, ...data });
+      wishesSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        wishList.push({ id: docSnap.id, ...data } as Wish);
         if (data.createdBy) userIds.add(data.createdBy);
       });
       setWishes(wishList);
-      const userMap: {[uid: string]: any} = {};
+      const userMap: { [uid: string]: UserData } = {};
       await Promise.all(Array.from(userIds).map(async (uid) => {
         const userDoc = await getDoc(doc(db, 'users', uid));
-        if (userDoc.exists()) userMap[uid] = userDoc.data();
+        if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
       }));
       setUsers(userMap);
-    } catch (err: any) {
-      setSupportError(err.message || 'Failed to support wish');
+    } catch (err) {
+      setSupportError((err as Error).message || 'Failed to support wish');
     } finally {
       setSupportLoading(null);
     }
@@ -316,7 +323,7 @@ export default function Home() {
                 transition={{ delay: 0.4, duration: 0.7 }}
                 className="text-lg text-gray-700 mb-8"
               >
-                WishBridge brings together those in need and those who can help. Share your wish or grant someone's dream - anonymously or publicly.
+                WishBridge brings together those in need and those who can help. Share your wish or grant someone&apos;s dream - anonymously or publicly.
               </motion.p>
               
               <motion.div
@@ -368,7 +375,7 @@ export default function Home() {
                     <div className="bg-orange-100 rounded-full p-2">
                       <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 overflow-hidden flex items-center justify-center">
                         {featuredWish.imageUrl ? (
-                          <img src={featuredWish.imageUrl} alt={featuredWish.title} className="object-cover w-full h-full rounded-xl" />
+                          <Image src={featuredWish.imageUrl} alt={featuredWish.title} width={64} height={64} className="object-cover w-full h-full rounded-xl" />
                         ) : (
                           <Gift className="text-orange-200" size={40} />
                         )}
@@ -534,7 +541,7 @@ export default function Home() {
                     >
                       <div className="h-48 bg-gray-200 border-2 border-dashed flex items-center justify-center overflow-hidden">
                         {wish.imageUrl ? (
-                          <img src={wish.imageUrl} alt={wish.title} className="object-cover w-full h-full" />
+                          <Image src={wish.imageUrl} alt={wish.title} width={384} height={192} className="object-cover w-full h-full" />
                         ) : (
                           <Gift className="text-orange-200" size={48} />
                         )}
@@ -694,7 +701,7 @@ export default function Home() {
                 </span>
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                We're redefining generosity with technology, trust, and heartfelt connections.
+                We&apos;re redefining generosity with technology, trust, and heartfelt connections.
               </p>
             </motion.div>
             
@@ -813,7 +820,7 @@ export default function Home() {
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-rose-400 rounded-full flex items-center justify-center text-white overflow-hidden">
                         {story.imageUrl ? (
-                          <img src={story.imageUrl} alt={story.title} className="object-cover w-full h-full rounded-full" />
+                          <Image src={story.imageUrl} alt={story.title} width={48} height={48} className="object-cover w-full h-full rounded-full" />
                         ) : (
                           story.title?.charAt(0) || 'W'
                         )}
@@ -823,7 +830,7 @@ export default function Home() {
                         <p className="text-sm text-gray-600">{users[story.createdBy]?.displayName || 'Wish Recipient'}</p>
                       </div>
                     </div>
-                    <p className="text-gray-700 italic mb-6">"{story.description}"</p>
+                    <p className="text-gray-700 italic mb-6">&quot;{story.description.replace("'", "&apos;")}&quot;</p>
                     <div className="flex gap-1">
                       {[...Array(5)].map((_, j) => (
                         <Star 
