@@ -6,6 +6,7 @@ import { Heart, Search, User, Gift, Plus, Menu, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import Image from 'next/image';
 
 const navItems = [
 	{ label: 'Home', href: '/home' },
@@ -100,6 +101,25 @@ export default function Header() {
 						<Heart className="text-rose-500" size={22} />
 						<span className="sr-only">Favorites</span>
 					</motion.button>
+					{!loading && user && (
+						<a
+							href="/profile"
+							className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-orange-200 bg-white shadow hover:bg-orange-50 transition-all overflow-hidden"
+							style={{ minWidth: 40, minHeight: 40 }}
+						>
+							{user.photoURL ? (
+								<Image
+									src={user.photoURL}
+									alt="Profile"
+									width={40}
+									height={40}
+									className="rounded-full object-cover"
+								/>
+							) : (
+								<User size={24} className="text-orange-400" />
+							)}
+						</a>
+					)}
 					{!loading && !user ? (
 						<motion.button
 							className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg hover:shadow-orange-200 transition-all"
@@ -121,12 +141,6 @@ export default function Header() {
 							<span>Log Out</span>
 						</motion.button>
 					) : null}
-					<motion.button
-						className="primary-gradient text-white px-4 py-2 rounded-full font-medium"
-						whileHover={{ scale: 1.05 }}
-					>
-						Post a Wish
-					</motion.button>
 				</motion.div>
 
 				{/* Mobile Hamburger */}
@@ -193,6 +207,25 @@ export default function Header() {
 										{displayed === '' ? '\u00A0' : ''}
 									</span>
 								</div>
+								{!loading && user && (
+									<a
+										href="/profile"
+										className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-orange-200 bg-white shadow hover:bg-orange-50 transition-all overflow-hidden"
+										style={{ minWidth: 40, minHeight: 40 }}
+									>
+										{user.photoURL ? (
+											<Image
+												src={user.photoURL}
+												alt="Profile"
+												width={40}
+												height={40}
+												className="rounded-full object-cover"
+											/>
+										) : (
+											<User size={24} className="text-orange-400" />
+										)}
+									</a>
+								)}
 								{!loading && !user ? (
 									<button
 										className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 shadow-lg"
@@ -208,9 +241,6 @@ export default function Header() {
 										<User size={20} /> Log Out
 									</button>
 								) : null}
-								<button className="primary-gradient text-white px-4 py-2 rounded-full font-medium">
-									Post a Wish
-								</button>
 							</div>
 						</motion.div>
 					)}
