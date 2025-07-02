@@ -346,7 +346,7 @@ export default function Home() {
                 </motion.a>
                 
                 <motion.a 
-                  href="#explore"
+                  href="/explore"
                   className="relative bg-white text-orange-500 border-2 border-orange-300 px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

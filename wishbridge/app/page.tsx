@@ -135,7 +135,7 @@ export default function Home() {
             className="flex flex-wrap justify-center gap-4"
           >
             <motion.a
-              href="#post"
+              href="/home"
               className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:shadow-orange-200 transition-all group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -145,7 +145,7 @@ export default function Home() {
             </motion.a>
 
             <motion.a
-              href="#explore"
+              href="/explore"
               className="relative bg-white text-orange-500 border-2 border-orange-300 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

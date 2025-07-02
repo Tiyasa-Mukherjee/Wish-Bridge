@@ -45,20 +45,22 @@ const sortOptions = [
 ];
 
 export default function Explore() {
-	const { user } = useAuth();
-	const [activeCategory, setActiveCategory] = useState(-1);
-	const [wishes, setWishes] = useState<Wish[]>([]);
-interface UserData {
-  displayName?: string;
-  // Add more user fields as needed
-}
-const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
-	const [loading, setLoading] = useState(true);
-	const [sortBy, setSortBy] = useState("newest");
-	const [editWishId, setEditWishId] = useState<string | null>(null);
-	const [editFields, setEditFields] = useState<Partial<Wish>>({});
-	const [editLoading, setEditLoading] = useState(false);
+  const { user } = useAuth();
+  const [activeCategory, setActiveCategory] = useState(-1);
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  interface UserData {
+    displayName?: string;
+    // Add more user fields as needed
+  }
+  const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
+  const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState("newest");
+  const [editWishId, setEditWishId] = useState<string | null>(null);
+  const [editFields, setEditFields] = useState<Partial<Wish>>({});
+  const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState<string>('');
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
 	useEffect(() => {
 		async function fetchWishes() {
@@ -87,10 +89,11 @@ const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
 		fetchWishes();
 	}, []);
 
-	const filteredWishes =
-		activeCategory === -1
-			? wishes
-			: wishes.filter((w) => w.category === categories[activeCategory].name);
+	const filteredWishes = wishes.filter(w => {
+		const matchesCategory = activeCategory === -1 || w.category === categories[activeCategory].name;
+		const matchesSearch = !search || w.title.toLowerCase().includes(search.toLowerCase()) || w.description.toLowerCase().includes(search.toLowerCase());
+		return matchesCategory && matchesSearch;
+	});
 
 	// Sorting logic
 	const sortedWishes = [...filteredWishes].sort((a, b) => {
@@ -186,17 +189,43 @@ const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
 							</button>
 						))}
 					</div>
-					<div className="flex justify-end mb-4">
-						<label className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
-						<select
-							value={sortBy}
-							onChange={e => setSortBy(e.target.value)}
-							className="px-3 py-2 rounded-xl border border-orange-200 bg-white text-orange-500 text-sm font-medium focus:ring-2 focus:ring-orange-300 outline-none"
-						>
-							{sortOptions.map(opt => (
-								<option key={opt.value} value={opt.value}>{opt.label}</option>
-							))}
-						</select>
+					<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+						<div className="flex gap-2 items-center w-full md:w-auto">
+							<input
+								type="text"
+								value={searchInput}
+								onChange={e => setSearchInput(e.target.value)}
+								onKeyDown={e => { if (e.key === 'Enter') setSearch(searchInput); }}
+								placeholder="Search wishes by title or description..."
+								className="px-3 py-2 rounded-xl border border-orange-200 bg-white text-orange-500 text-sm font-medium focus:ring-2 focus:ring-orange-300 outline-none w-full md:w-72"
+							/>
+							<button
+								className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-xl font-medium shadow hover:shadow-orange-200 transition-all"
+								onClick={() => setSearch(searchInput)}
+							>
+								Search
+							</button>
+							{search && (
+								<button
+									className="ml-2 text-orange-400 hover:text-orange-600 text-xs underline"
+									onClick={() => { setSearch(''); setSearchInput(''); }}
+								>
+									Clear
+								</button>
+							)}
+						</div>
+						<div className="flex justify-end">
+							<label className="mr-2 text-sm font-medium text-gray-700">Sort by:</label>
+							<select
+								value={sortBy}
+								onChange={e => setSortBy(e.target.value)}
+								className="px-3 py-2 rounded-xl border border-orange-200 bg-white text-orange-500 text-sm font-medium focus:ring-2 focus:ring-orange-300 outline-none"
+							>
+								{sortOptions.map(opt => (
+									<option key={opt.value} value={opt.value}>{opt.label}</option>
+								))}
+							</select>
+						</div>
 					</div>
 				</div>
 				{/* Wishes Grid */}
