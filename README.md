@@ -1,6 +1,6 @@
 # Wish-Bridge
 
-![Wish-Bridge Banner](https://.com/placeholder/wishbridge-banner.png)
+![Wish-Bridge Banner](https://wishtic.vercel.app/_next/image?url=%2FApp_logo.png&w=64&q=75)
 
 <p align="center">
   <b>Where Kindness Connects Dreams</b>
