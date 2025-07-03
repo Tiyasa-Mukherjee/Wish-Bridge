@@ -901,12 +901,12 @@ export default function Home() {
         </motion.section>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-orange-100 py-12 px-4">
+        <footer className="bg-white border-t border-orange-100 py-12 px-4 relative">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-5 gap-8 mb-12">
               <div className="md:col-span-2">
                 <div className="flex items-center gap-3 mb-6">
-                  <Gift className="text-orange-500" size={32} />
+                  <Image src="/App_logo.png" alt="WishBridge Logo" width={32} height={32} className="rounded-lg" />
                   <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
                     WishBridge
                   </h3>
@@ -916,16 +916,18 @@ export default function Home() {
                 </p>
                 <div className="flex gap-4">
                   {[
-                    { icon: <Twitter className="text-orange-500" size={20} />, url: "#" },
-                    { icon: <Facebook className="text-orange-500" size={20} />, url: "#" },
-                    { icon: <Instagram className="text-orange-500" size={20} />, url: "#" },
-                    { icon: <Mail className="text-orange-500" size={20} />, url: "#" }
+                    { icon: <Twitter className="text-orange-500" size={20} />, url: "#", label: "Twitter" },
+                    { icon: <Facebook className="text-orange-500" size={20} />, url: "#", label: "Facebook" },
+                    { icon: <Instagram className="text-orange-500" size={20} />, url: "#", label: "Instagram" },
+                    { icon: <Mail className="text-orange-500" size={20} />, url: "#", label: "Email" }
                   ].map((social, i) => (
                     <motion.a
                       key={i}
                       href={social.url}
-                      className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center hover:bg-orange-200 transition-colors"
+                      aria-label={social.label}
+                      className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center hover:bg-orange-200 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400"
                       whileHover={{ y: -5 }}
+                      tabIndex={0}
                     >
                       {social.icon}
                     </motion.a>
@@ -933,43 +935,46 @@ export default function Home() {
                 </div>
               </div>
               
-              {[
-                {
-                  title: "Platform",
-                  links: ["Explore Wishes", "How It Works", "Success Stories", "For Businesses"]
-                },
-                {
-                  title: "Company",
-                  links: ["About Us", "Careers", "Press", "Contact"]
-                },
-                {
-                  title: "Resources",
-                  links: ["Help Center", "Blog", "Trust & Safety", "FAQ"]
-                }
-              ].map((column, i) => (
-                <div key={i}>
-                  <h4 className="text-lg font-bold mb-6 text-gray-800">{column.title}</h4>
-                  <ul className="space-y-3">
-                    {column.links.map((link, j) => (
-                      <li key={j}>
-                        <a 
-                          href="#" 
-                          className="text-gray-600 hover:text-orange-500 transition-colors"
-                        >
-                          {link}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+            {[
+              {
+                title: "Platform",
+                links: ["Explore Wishes", "How It Works", "Success Stories", "For Businesses"]
+              },
+              {
+                title: "Company",
+                links: ["About Us", "Careers", "Press", "Contact"]
+              },
+              {
+                title: "Resources",
+                links: ["Help Center", "Blog", "Trust & Safety", "FAQ"]
+              }
+            ].map((column, i) => (
+              <div key={i}>
+                <h4 className="text-lg font-bold mb-6 text-gray-800">{column.title}</h4>
+                <ul className="space-y-3">
+                  {column.links.map((link, j) => (
+                    <li key={j}>
+                      <a 
+                        href="#" 
+                        className="text-gray-600 hover:text-orange-500 transition-colors"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
             </div>
-            
-            <div className="pt-8 border-t border-orange-100 text-center text-gray-600">
+            <div className="pt-8 border-t border-orange-100 text-center text-gray-600 flex flex-col items-center gap-2">
               <p>
                 © {new Date().getFullYear()} WishBridge. Making wishes come true, one gift at a time.
               </p>
+              <p className="text-sm text-orange-400 flex items-center gap-1">
+                Made with <span aria-label="love" className="text-rose-500">❤️</span> by <span className="font-semibold">Tiyasa</span>
+              </p>
             </div>
+            <div className="absolute left-0 right-0 bottom-0 h-2 bg-gradient-to-r from-orange-100 via-rose-100 to-orange-100 opacity-60 rounded-b-2xl pointer-events-none" />
           </div>
         </footer>
 

@@ -63,7 +63,13 @@ export default function Header() {
 					whileHover={{ scale: 1.05 }}
 					className="flex items-center gap-2 flex-shrink-0"
 				>
-					<Gift className="text-orange-500" size={32} />
+					<Image
+						src="/App_logo.png"
+						alt="WishBridge Logo"
+						width={32}
+						height={32}
+						className="rounded-lg"
+					/>
 					<h1 className="py-2 text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
 						WishBridge
 					</h1>
@@ -168,7 +174,13 @@ export default function Header() {
 						>
 							<div className="flex items-center justify-between mb-6">
 								<div className="flex items-center gap-2">
-									<Gift className="text-orange-500" size={28} />
+									<Image
+										src="/App_logo.png"
+										alt="WishBridge Logo"
+										width={28}
+										height={28}
+										className="rounded-lg"
+									/>
 									<span className="text-xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
 										WishBridge
 									</span>
