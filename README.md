@@ -1,6 +1,6 @@
 # Wish-Bridge
 
-![Wish-Bridge Banner](https://user-images.githubusercontent.com/placeholder/wishbridge-banner.png)
+![Wish-Bridge Banner](https://.com/placeholder/wishbridge-banner.png)
 
 <p align="center">
   <b>Where Kindness Connects Dreams</b>
@@ -9,7 +9,7 @@
 ---
 
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/00000000?v=4" width="100" height="100" style="border-radius:50%" alt="Developer Photo" />
+  <img src="https://avatars.githubusercontent.com/u/183731460?v=4" width="100" height="100" style="border-radius:50%" alt="Developer Photo" />
   <br/>
   <b>Developed by Tiyasa</b>
 </p>
