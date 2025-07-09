@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { User, Mail, LogOut, Calendar, ShieldCheck, Edit2, Star, Heart, Gift, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import React, { useState, useEffect } from 'react';
-import { doc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs, query, where, getDoc } from 'firebase/firestore';
 import { updateUserProfile } from '@/lib/userProfile';
 
 export default function ProfilePage() {
@@ -231,6 +231,19 @@ export default function ProfilePage() {
             <span className="bg-orange-100 text-orange-500 px-3 py-1 rounded-full text-xs font-medium">{user.emailVerified ? 'Verified' : 'Unverified'}</span>
             <span className="bg-rose-100 text-rose-500 px-3 py-1 rounded-full text-xs font-medium">{user.providerData.map(p => p.providerId).join(', ')}</span>
           </div>
+          {/* Wallet section */}
+          <div className="flex items-center gap-2 mt-4 bg-gradient-to-r from-orange-100 to-rose-100 border-2 border-orange-300 shadow-lg rounded-xl px-4 py-2 transition-all">
+            <span className="font-medium text-gray-700">Wallet:</span>
+            <span className="text-orange-600 font-extrabold text-lg flex items-center gap-1">
+              <UserWalletBalance uid={user.uid} />
+            </span>
+            <a
+              href="/wallet"
+              className="ml-2 text-xs bg-gradient-to-r from-orange-400 to-rose-400 text-white px-3 py-1 rounded-full font-semibold shadow hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              Buy Tokens
+            </a>
+          </div>
           <button
             className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-5 py-2 rounded-full font-medium flex items-center gap-2 shadow hover:shadow-orange-200 transition-all mt-2"
             onClick={() => auth.signOut()}
@@ -389,5 +402,35 @@ export default function ProfilePage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Helper component to fetch and display wallet balance and total tokens bought from transactions
+function UserWalletBalance({ uid }: { uid: string }) {
+  const [tokens, setTokens] = useState<number | null>(null);
+  const [tokensBought, setTokensBought] = useState<number | null>(null);
+  useEffect(() => {
+    if (!uid) return;
+    // Use the same logic as /wallet: fetch tokens from user doc
+    getDoc(doc(db, 'users', uid)).then((snap: any) => {
+      if (snap.exists()) setTokens(snap.data().tokens || 0);
+      else setTokens(0);
+    });
+    // Still show total tokens bought from transactions
+    getDocs(collection(db, 'users', uid, 'transactions')).then((querySnap: any) => {
+      let total = 0;
+      querySnap.forEach((doc: any) => {
+        const data = doc.data();
+        total += data.tokens || data.amount || 0;
+      });
+      setTokensBought(total);
+    });
+  }, [uid]);
+  if (tokens === null || tokensBought === null) return <span className="animate-pulse text-orange-300">...</span>;
+  return (
+    <>
+      {tokens} tokens
+      <span className="ml-2 text-xs text-gray-500 font-normal">({tokensBought} bought)</span>
+    </>
   );
 }

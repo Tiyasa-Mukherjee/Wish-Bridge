@@ -5,11 +5,10 @@ import { useState, useEffect } from "react";
 import { Gift, Heart, BookOpen, Stethoscope, House, Palette, AlertTriangle, Star } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, doc, getDoc, updateDoc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useAuth } from '@/context/AuthContext';
 import Image from "next/image";
+import { useAuth } from '@/context/AuthContext';
 
 // Define a Wish type for type safety
 
@@ -44,14 +43,24 @@ const sortOptions = [
 	{ label: "% Completed (High to Low)", value: "percentDesc" },
 ];
 
+// Add UserData tokens for balance
+interface UserData {
+  displayName?: string;
+  tokens?: number;
+  [key: string]: unknown;
+}
+
+// Supporter type
+interface Supporter {
+  id: string;
+  userId: string;
+  amount: number;
+}
+
 export default function Explore() {
   const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState(-1);
   const [wishes, setWishes] = useState<Wish[]>([]);
-  interface UserData {
-    displayName?: string;
-    // Add more user fields as needed
-  }
   const [users, setUsers] = useState<{ [uid: string]: UserData }>({});
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
@@ -61,6 +70,10 @@ export default function Explore() {
   const [editError, setEditError] = useState<string>('');
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [showSupportModal, setShowSupportModal] = useState<string | null>(null); // wishId
+  const [supportAmount, setSupportAmount] = useState('');
+  const [supportLoading, setSupportLoading] = useState<string | null>(null);
+  const [supportError, setSupportError] = useState('');
 
 	useEffect(() => {
 		async function fetchWishes() {
@@ -156,6 +169,71 @@ export default function Explore() {
 			setEditLoading(false);
 		}
 	}
+
+  // Helper: get user's token balance
+  const userTokens = user ? (users[user.uid]?.tokens || 0) : 0;
+
+  // Support Wish handler (same as home page logic)
+  async function handleSupportWish(wish: Wish, amount: number) {
+    setSupportLoading(wish.id);
+    setSupportError('');
+    try {
+      if (!user) throw new Error('You must be signed in.');
+      if (amount < 1) throw new Error('Amount must be at least 1 token.');
+      if (userTokens < amount) throw new Error('Insufficient tokens.');
+      await runTransaction(db, async (transaction) => {
+        const wishRef = doc(db, 'wishes', wish.id);
+        const userRef = doc(db, 'users', user.uid);
+        const wishSnap = await transaction.get(wishRef);
+        const userSnap = await transaction.get(userRef);
+        if (!wishSnap.exists() || !userSnap.exists()) throw new Error('Wish or user not found.');
+        const wishData = wishSnap.data();
+        const userData = userSnap.data();
+        if ((userData.tokens || 0) < amount) throw new Error('Insufficient tokens.');
+        // 1 token = 5 rupees
+        const rupees = amount * 5;
+        transaction.update(wishRef, {
+          raisedAmount: (wishData.raisedAmount || 0) + rupees,
+          supporters: (wishData.supporters || 0) + 1
+        });
+        transaction.update(userRef, {
+          tokens: (userData.tokens || 0) - amount
+        });
+        // Add supporter record
+        const supporterRef = doc(collection(db, 'wishes', wish.id, 'supporters'));
+        transaction.set(supporterRef, {
+          userId: user.uid,
+          amount,
+          supportedAt: serverTimestamp(),
+        });
+      });
+      setShowSupportModal(null);
+      setSupportAmount('');
+      // Refresh wishes and users
+      const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'));
+      const wishesSnap = await getDocs(wishesQuery);
+      const wishList: Wish[] = [];
+      const userIds = new Set<string>();
+      wishesSnap.forEach((doc) => {
+        const data = doc.data();
+        wishList.push({ id: doc.id, ...data } as Wish);
+        if (data.createdBy) userIds.add(data.createdBy);
+      });
+      setWishes(wishList);
+      const userMap: { [uid: string]: UserData } = {};
+      await Promise.all(
+        Array.from(userIds).map(async (uid) => {
+          const userDoc = await getDoc(doc(db, 'users', uid));
+          if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
+        })
+      );
+      setUsers(userMap);
+    } catch (err) {
+      setSupportError((err as Error).message || 'Failed to support wish');
+    } finally {
+      setSupportLoading(null);
+    }
+  }
 
 	return (
 		<ProtectedRoute>
@@ -282,7 +360,7 @@ export default function Explore() {
 												<p className="text-gray-700 mb-4 flex-1">{wish.description}</p>
 												<div className="mb-3">
 													<div className="flex justify-between items-center mb-1">
-														<span className="text-sm font-medium text-gray-700">${wish.raisedAmount || 0} raised of ${wish.targetAmount || 0}</span>
+														<span className="text-sm font-medium text-gray-700">₹{wish.raisedAmount} raised of ₹{wish.targetAmount}</span>
 														<span className="text-sm font-medium text-orange-600">{percent}%</span>
 													</div>
 													<div className="w-full bg-orange-100 rounded-full h-2.5">
@@ -303,14 +381,17 @@ export default function Explore() {
 														<span className="text-xs">({wish.supporters || 0} supporters)</span>
 													</div>
 													<div className="flex gap-2 items-center">
-														<motion.button
-															whileHover={{ scale: 1.05 }}
-															className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-orange-300"
-															style={{ minWidth: 110 }}
-															disabled
-														>
-															<Heart className="inline-block mr-1 -mt-0.5" size={16} /> Support 
-														</motion.button>
+														{!isOwner && (
+															<motion.button
+																whileHover={{ scale: 1.05 }}
+																className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-orange-300"
+																style={{ minWidth: 110 }}
+																onClick={() => { setShowSupportModal(wish.id); setSupportAmount(''); setSupportError(''); }}
+																disabled={supportLoading === wish.id}
+															>
+																<Heart className="inline-block mr-1 -mt-0.5" size={16} /> Support
+															</motion.button>
+														)}
 														{isOwner && (
 															<motion.button
 																whileHover={{ scale: 1.05 }}
@@ -379,6 +460,26 @@ export default function Explore() {
 						</div>
 					</div>
 				)}
+				{/* Support Wish Modal */}
+				{showSupportModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+    <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col items-center border border-orange-100 relative">
+      <button className="absolute top-2 right-2 text-orange-400 hover:text-orange-600" onClick={() => setShowSupportModal(null)}>&times;</button>
+      <h3 className="text-xl font-bold mb-4 text-orange-500">Support Wish</h3>
+      <form className="w-full flex flex-col gap-4" onSubmit={e => { e.preventDefault(); const wish = wishes.find(w => w.id === showSupportModal); if (wish) handleSupportWish(wish, Number(supportAmount)); }}>
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Amount (tokens)</label>
+          <input type="number" min="1" value={supportAmount} onChange={e => setSupportAmount(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
+        </div>
+        <div className="text-sm text-gray-500">Your balance: <span className="font-bold text-orange-500">{userTokens}</span> tokens</div>
+        {supportError && <div className="text-red-500 text-sm">{supportError}</div>}
+        <button type="submit" className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full font-medium shadow hover:shadow-orange-200 transition-all mt-2" disabled={supportLoading === showSupportModal}>
+          {supportLoading === showSupportModal ? 'Processing...' : 'Support'}
+        </button>
+      </form>
+    </div>
+  </div>
+)}
 				{/* CTA */}
 				<section className="w-full py-16 px-4">
 					<div className="max-w-3xl mx-auto">

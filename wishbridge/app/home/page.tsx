@@ -3,10 +3,10 @@
 import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle } from 'lucide-react';
+import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle, Trash2 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import ProtectedRoute from "@/components/common/ProtectedRoute";
-import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 
@@ -29,6 +29,13 @@ interface UserData {
   displayName?: string;
   tokens?: number;
   [key: string]: unknown;
+}
+
+// Supporter type for type safety
+interface Supporter {
+  id: string;
+  userId: string;
+  amount: number; // tokens contributed
 }
 
 export default function Home() {
@@ -224,8 +231,10 @@ export default function Home() {
         const wishData = wishSnap.data();
         const userData = userSnap.data();
         if ((userData.tokens || 0) < amount) throw new Error('Insufficient tokens.');
+        // 1 token = 5 rupees
+        const rupees = amount * 5;
         transaction.update(wishRef, {
-          raisedAmount: (wishData.raisedAmount || 0) + amount,
+          raisedAmount: (wishData.raisedAmount || 0) + rupees,
           supporters: (wishData.supporters || 0) + 1
         });
         transaction.update(userRef, {
@@ -255,6 +264,59 @@ export default function Home() {
       setSupportError((err as Error).message || 'Failed to support wish');
     } finally {
       setSupportLoading(null);
+    }
+  }
+
+  // Add delete wish logic with supporter refund
+  async function handleDeleteWish(wishId: string) {
+    if (!user) return;
+    if (!window.confirm('Are you sure you want to delete this wish?')) return;
+    try {
+      const wishRef = doc(db, 'wishes', wishId);
+      const supportersCol = collection(db, 'wishes', wishId, 'supporters');
+      const supportersSnap = await getDocs(supportersCol);
+      // Use correct type for supporters
+      const supporters: Supporter[] = supportersSnap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() } as Supporter));
+      await runTransaction(db, async (transaction) => {
+        // Refund each supporter
+        for (const supporter of supporters) {
+          if (supporter.userId && supporter.amount) {
+            const supporterRef = doc(db, 'users', supporter.userId);
+            const supporterSnap = await transaction.get(supporterRef);
+            if (supporterSnap.exists()) {
+              const supporterData = supporterSnap.data();
+              transaction.update(supporterRef, {
+                tokens: (supporterData.tokens || 0) + supporter.amount
+              });
+            }
+          }
+          // Delete supporter doc
+          const supporterDocRef = doc(db, 'wishes', wishId, 'supporters', supporter.id);
+          transaction.delete(supporterDocRef);
+        }
+        // Delete the wish itself
+        transaction.delete(wishRef);
+      });
+      // Refresh wishes
+      const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'), limit(12));
+      const wishesSnap = await getDocs(wishesQuery);
+      const wishList: Wish[] = [];
+      const userIds = new Set<string>();
+      wishesSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        wishList.push({ id: docSnap.id, ...data } as Wish);
+        if (data.createdBy) userIds.add(data.createdBy);
+      });
+      setWishes(wishList);
+      // Fetch user info for wish creators
+      const userMap: { [uid: string]: UserData } = {};
+      await Promise.all(Array.from(userIds).map(async (uid) => {
+        const userDoc = await getDoc(doc(db, 'users', uid));
+        if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
+      }));
+      setUsers(userMap);
+    } catch (err) {
+      alert('Failed to delete wish and refund supporters.');
     }
   }
 
@@ -400,7 +462,7 @@ export default function Home() {
                   </p>
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-700">${featuredWish.raisedAmount || 0} raised of ${featuredWish.targetAmount || 0}</span>
+                      <span className="text-sm font-medium text-gray-700">₹{featuredWish.raisedAmount || 0} raised of ₹{featuredWish.targetAmount || 0}</span>
                       <span className="text-sm font-medium text-orange-600">{Math.round((featuredWish.raisedAmount || 0) / (featuredWish.targetAmount || 1) * 100)}%</span>
                     </div>
                     <div className="w-full bg-orange-100 rounded-full h-2.5">
@@ -532,38 +594,40 @@ export default function Home() {
                   return (
                     <motion.div
                       key={wish.id}
-                      className="bg-white rounded-2xl shadow-lg overflow-hidden border border-orange-100"
+                      className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-orange-100 hover:shadow-2xl transition-all group relative"
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.2 }}
                       whileHover={{ y: -10 }}
                     >
-                      <div className="h-48 bg-gray-200 border-2 border-dashed flex items-center justify-center overflow-hidden">
+                      <div className="h-48 bg-gradient-to-br from-orange-50 to-rose-50 border-b-2 border-orange-100 flex items-center justify-center overflow-hidden relative">
                         {wish.imageUrl ? (
-                          <Image src={wish.imageUrl} alt={wish.title} width={384} height={192} className="object-cover w-full h-full" />
+                          <Image src={wish.imageUrl} alt={wish.title} width={384} height={192} className="object-cover w-full h-full rounded-t-3xl group-hover:scale-105 transition-transform duration-300" />
                         ) : (
                           <Gift className="text-orange-200" size={48} />
                         )}
+                        {wish.verified && (
+                          <span className="absolute top-3 right-3 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full shadow font-semibold">Verified</span>
+                        )}
                       </div>
-                      <div className="p-6">
-                        <div className="flex justify-between items-start mb-4">
-                          <h3 className="font-bold text-xl">{wish.title}</h3>
-                          {wish.verified && (
-                            <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
-                              Verified
-                            </span>
-                          )}
+                      <div className="p-6 flex flex-col gap-3">
+                        <div className="flex justify-between items-center mb-1">
+                          <h3 className="font-bold text-xl text-orange-600 group-hover:text-rose-500 transition-colors">{wish.title}</h3>
+                          <span className="text-xs bg-orange-100 text-orange-500 px-2 py-1 rounded-full font-semibold">{wish.category}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-orange-500 mb-3">
-                          {/* Optionally show category icon */}
-                          <span>{wish.category}</span>
+                        <p className="text-gray-700 text-sm line-clamp-3 mb-2">{wish.description}</p>
+                        <div className="flex items-center gap-2 text-gray-500 text-xs mb-2">
+                          <a href={`/profile/${wish.createdBy}`} className="font-medium text-orange-500 hover:underline text-sm">
+                            {creator.displayName || 'User'}
+                          </a>
+                          <span>•</span>
+                          <span>{wish.supporters || 0} supporters</span>
                         </div>
-                        <p className="text-gray-700 mb-6">{wish.description}</p>
-                        <div className="mb-4">
+                        <div className="mb-2">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-gray-700">${wish.raisedAmount || 0} raised of ${wish.targetAmount || 0}</span>
-                            <span className="text-sm font-medium text-orange-600">{percent}%</span>
+                            <span className="text-sm font-medium text-gray-700">₹{wish.raisedAmount || 0} raised</span>
+                            <span className="text-xs font-semibold text-orange-600">{percent}%</span>
                           </div>
                           <div className="w-full bg-orange-100 rounded-full h-2.5">
                             <motion.div 
@@ -574,20 +638,28 @@ export default function Home() {
                             />
                           </div>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2 text-gray-500">
-                            <a href={`/profile/${wish.createdBy}`} className="font-medium text-orange-500 hover:underline">
-                              {creator.displayName || 'User'}
-                            </a>
-                            <span className="text-xs">({wish.supporters || 0} supporters)</span>
+                        <div className="flex justify-between items-center mt-2">
+                          <div className="flex gap-2 items-center">
+                            <motion.button
+                              whileHover={{ scale: 1.07 }}
+                              className="relative bg-gradient-to-r from-orange-500 to-rose-500 text-white px-5 py-2 rounded-full font-bold shadow-lg hover:shadow-orange-200 transition-all text-sm flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-orange-400 group/support"
+                              onClick={() => { setShowSupportModal(wish.id); setSupportAmount(''); setSupportError(''); }}
+                            >
+                              <Heart size={16} className="text-white group-hover/support:scale-125 transition-transform" />
+                              <span>Support Wish</span>
+                            </motion.button>
+                            {user && user.uid === wish.createdBy && (
+                              <button
+                                className="ml-2 text-xs bg-gradient-to-r from-rose-400 to-orange-400 text-white px-3 py-1 rounded-full font-semibold shadow hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-orange-400"
+                                onClick={() => handleDeleteWish(wish.id)}
+                                title="Delete Wish"
+                                style={{ background: 'none', border: 'none', padding: 0, boxShadow: 'none' }}
+                              >
+                                <Trash2 size={20} className="text-orange-400 hover:text-rose-500 transition-colors" />
+                              </button>
+                            )}
                           </div>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            className="bg-gradient-to-r from-orange-400 to-rose-400 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md"
-                            onClick={() => { setShowSupportModal(wish.id); setSupportAmount(''); setSupportError(''); }}
-                          >
-                            Support Wish
-                          </motion.button>
+                          <span className="text-xs text-gray-400">Target: ₹{wish.targetAmount || 0}</span>
                         </div>
                       </div>
                     </motion.div>
@@ -1002,7 +1074,7 @@ export default function Home() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-1">Target Amount ($)</label>
+                  <label className="block text-gray-700 font-medium mb-1">Target Amount (₹)</label>
                   <input type="number" min="1" value={postTarget} onChange={e => setPostTarget(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-orange-100 focus:ring-2 focus:ring-orange-300 outline-none bg-orange-50" required />
                 </div>
                 <div>
