@@ -503,7 +503,7 @@ export default function Explore() {
 				</p>
 								<div className="flex flex-col sm:flex-row justify-center gap-4">
 									<motion.a
-										href="#"
+										href="/home"
 										className="bg-white text-orange-500 px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-orange-50 transition-all group"
 										whileHover={{ scale: 1.05 }}
 										whileTap={{ scale: 0.95 }}
@@ -513,7 +513,7 @@ export default function Explore() {
 										</span>
 									</motion.a>
 									<motion.a
-										href="#"
+										href="/home"
 										className="bg-transparent border-2 border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all group"
 										whileHover={{ scale: 1.05 }}
 										whileTap={{ scale: 0.95 }}
