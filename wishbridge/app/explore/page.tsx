@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 
 // Define a Wish type for type safety
 
+
 interface Wish {
   id: string;
   title: string;
