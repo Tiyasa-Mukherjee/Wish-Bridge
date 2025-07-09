@@ -69,6 +69,7 @@ export default function Explore() {
   const [supportAmount, setSupportAmount] = useState('');
   const [supportLoading, setSupportLoading] = useState<string | null>(null);
   const [supportError, setSupportError] = useState('');
+  const [userTokens, setUserTokens] = useState<number>(0);
 
 	useEffect(() => {
 		async function fetchWishes() {
@@ -96,6 +97,18 @@ export default function Explore() {
 		}
 		fetchWishes();
 	}, []);
+
+	// Fetch user tokens from Firestore
+  async function fetchUserTokens() {
+    if (!user) return;
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      setUserTokens(userDoc.data().tokens || 0);
+    }
+  }
+  useEffect(() => {
+    fetchUserTokens();
+  }, [user]);
 
 	const filteredWishes = wishes.filter(w => {
 		const matchesCategory = activeCategory === -1 || w.category === categories[activeCategory].name;
@@ -165,9 +178,6 @@ export default function Explore() {
 		}
 	}
 
-  // Helper: get user's token balance
-  const userTokens = user ? (users[user.uid]?.tokens || 0) : 0;
-
   // Support Wish handler (same as home page logic)
   async function handleSupportWish(wish: Wish, amount: number) {
     setSupportLoading(wish.id);
@@ -223,6 +233,7 @@ export default function Explore() {
         })
       );
       setUsers(userMap);
+      await fetchUserTokens(); // Refresh token balance after support
     } catch (err) {
       setSupportError((err as Error).message || 'Failed to support wish');
     } finally {

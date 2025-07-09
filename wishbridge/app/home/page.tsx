@@ -56,6 +56,7 @@ export default function Home() {
   const [postError, setPostError] = useState('');
 
   // Token system state
+  const [userTokens, setUserTokens] = useState<number>(0);
   const [supportLoading, setSupportLoading] = useState<string | null>(null);
   const [supportError, setSupportError] = useState('');
   const [supportAmount, setSupportAmount] = useState('');
@@ -211,8 +212,20 @@ export default function Home() {
     }
   }
 
+  // Fetch user tokens from Firestore
+  async function fetchUserTokens() {
+    if (!user) return;
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      setUserTokens(userDoc.data().tokens || 0);
+    }
+  }
+  useEffect(() => {
+    fetchUserTokens();
+  }, [user]);
+
   // Helper: get user's token balance
-  const userTokens = users[user?.uid || '']?.tokens || 0;
+  const displayedUserTokens = users[user?.uid || '']?.tokens || 0;
 
   // Support Wish handler
   async function handleSupportWish(wish: Wish, amount: number) {
@@ -260,6 +273,7 @@ export default function Home() {
         if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
       }));
       setUsers(userMap);
+      await fetchUserTokens(); // Refresh token balance after support
     } catch (err) {
       setSupportError((err as Error).message || 'Failed to support wish');
     } finally {
