@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useAnimation } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle, Trash2 } from 'lucide-react';
 import Header from '@/components/layout/Header';
@@ -213,19 +213,16 @@ export default function Home() {
   }
 
   // Fetch user tokens from Firestore
-  async function fetchUserTokens() {
+  const fetchUserTokens = useCallback(async () => {
     if (!user) return;
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       setUserTokens(userDoc.data().tokens || 0);
     }
-  }
+  }, [user]);
   useEffect(() => {
     fetchUserTokens();
-  }, [user]);
-
-  // Helper: get user's token balance
-  const displayedUserTokens = users[user?.uid || '']?.tokens || 0;
+  }, [fetchUserTokens]);
 
   // Support Wish handler
   async function handleSupportWish(wish: Wish, amount: number) {

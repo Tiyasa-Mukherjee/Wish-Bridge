@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Gift, Heart, BookOpen, Stethoscope, House, Palette, AlertTriangle, Star } from "lucide-react";
 import Header from "@/components/layout/Header";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
@@ -99,16 +99,16 @@ export default function Explore() {
 	}, []);
 
 	// Fetch user tokens from Firestore
-  async function fetchUserTokens() {
+  const fetchUserTokens = useCallback(async () => {
     if (!user) return;
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       setUserTokens(userDoc.data().tokens || 0);
     }
-  }
+  }, [user]);
   useEffect(() => {
     fetchUserTokens();
-  }, [user]);
+  }, [fetchUserTokens]);
 
 	const filteredWishes = wishes.filter(w => {
 		const matchesCategory = activeCategory === -1 || w.category === categories[activeCategory].name;
