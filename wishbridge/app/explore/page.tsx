@@ -50,12 +50,6 @@ interface UserData {
   [key: string]: unknown;
 }
 
-// Supporter type
-interface Supporter {
-  id: string;
-  userId: string;
-  amount: number;
-}
 
 export default function Explore() {
   const { user } = useAuth();

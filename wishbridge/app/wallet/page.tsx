@@ -38,7 +38,7 @@ export default function WalletPage() {
         setMsg(`Successfully purchased ${amount} token(s)!`);
         setLoading(false);
       }, 1200); // Simulate network/payment delay
-    } catch (err) {
+    } catch {
       setMsg("Purchase failed. Please try again.");
       setLoading(false);
     }
