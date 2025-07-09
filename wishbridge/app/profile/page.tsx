@@ -412,15 +412,15 @@ function UserWalletBalance({ uid }: { uid: string }) {
   useEffect(() => {
     if (!uid) return;
     // Use the same logic as /wallet: fetch tokens from user doc
-    getDoc(doc(db, 'users', uid)).then((snap: any) => {
-      if (snap.exists()) setTokens(snap.data().tokens || 0);
+    getDoc(doc(db, 'users', uid)).then((snap) => {
+      if (snap.exists()) setTokens((snap.data() as { tokens?: number }).tokens || 0);
       else setTokens(0);
     });
     // Still show total tokens bought from transactions
-    getDocs(collection(db, 'users', uid, 'transactions')).then((querySnap: any) => {
+    getDocs(collection(db, 'users', uid, 'transactions')).then((querySnap) => {
       let total = 0;
-      querySnap.forEach((doc: any) => {
-        const data = doc.data();
+      querySnap.forEach((doc) => {
+        const data = doc.data() as { tokens?: number; amount?: number };
         total += data.tokens || data.amount || 0;
       });
       setTokensBought(total);

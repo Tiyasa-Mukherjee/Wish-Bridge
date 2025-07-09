@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Gift, Heart, Star, ShieldCheck, Search, Plus, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook, BookOpen, House, Stethoscope, Palette, AlertTriangle, Trash2 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import ProtectedRoute from "@/components/common/ProtectedRoute";
-import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit, doc, getDoc, addDoc, serverTimestamp, runTransaction, } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 
@@ -315,7 +315,7 @@ export default function Home() {
         if (userDoc.exists()) userMap[uid] = userDoc.data() as UserData;
       }));
       setUsers(userMap);
-    } catch (err) {
+    } catch {
       alert('Failed to delete wish and refund supporters.');
     }
   }
