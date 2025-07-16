@@ -3,7 +3,7 @@
 import { motion, useAnimation } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Gift, Heart, Star, ShieldCheck, Search, User, ChevronRight, Sparkles, Mail, Twitter, Instagram, Facebook } from 'lucide-react';
-import Header from '../components/layout/Header';
+import Header from '@/components/layout/Header';
 
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
